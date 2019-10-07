@@ -1,0 +1,33 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+    <h1>{{ orders | length }} największych zamówień</h1>
+    {{ dump() }}
+
+
+    <table class="display compact">
+        <thead>
+        <tr>
+            <th>ID zamówienia</th>
+            <th>Nr zamówienia</th>
+            <th>Nazwa kontrahenta</th>
+            <th>data złożenia</th>
+            <th>Wartość netto</th>
+            <th>Wartość brutto</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for order in orders %}
+            <tr>
+                <td>{{ order.id_zamowienia }} </td>
+                <td>{{ order.numer_zamowienia }} </td>
+                <td>{{ order.nazwa_kontrahenta }} </td>
+                <td>{{ order.data_zlozenia | date("d/m/Y") }} </td>
+                <td>{{ order.wartosc_netto | number_format(2, ',') }} </td>
+                <td>{{ order.wartosc_brutto | number_format(2, ',') }} </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

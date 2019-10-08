@@ -1,0 +1,40 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h2>{{ title }} </h2>
+    <table class="display mdl-data-table" style="width:100%">
+        <thead>
+        <tr>
+            <th>Id</th>
+            <th>Nazwa grupy</th>
+            <th>Nazwa skrócona</th>
+            <th>NIP</th>
+            <th>Nazwa kontrahenta</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for client in clients %}
+            <tr>
+                <td>{{ client.id }} </td>
+                <td>{{ client.nazwa_grupy }} </td>
+                <td>{{ client.nazwa_skrocona }} </td>
+                <td>{% if client.nip is null or client.nip is empty %}
+                        brak nr NIP w bazie
+                    {% else %}
+                        {{ client.nip }}
+                    {% endif %}
+                </td>
+                <td>{{ client.nazwa_kontrahenta }} </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ asset('js/client.js') }}"></script>
+{% endblock %}

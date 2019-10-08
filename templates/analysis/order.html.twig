@@ -4,14 +4,15 @@
 
 {% block body %}
 
-    <h1>{{ orders | length }} największych zamówień</h1>
-    {{ dump() }}
+    <h2>{{ orders | length }} największych zamówień</h2>
 
+    {# Wykres kołowy #}
     <div id="div_chart"></div>
-    <table class="display compact">
+
+    {# Tabela #}
+    <table class="display mdl-data-table" style="width:100%">
         <thead>
         <tr>
-            <th>ID zamówienia</th>
             <th>Nr zamówienia</th>
             <th>Nazwa kontrahenta</th>
             <th>data złożenia</th>
@@ -22,7 +23,6 @@
         <tbody>
         {% for order in orders %}
             <tr>
-                <td>{{ order.id_zamowienia }} </td>
                 <td>{{ order.numer_zamowienia }} </td>
                 <td>{{ order.nazwa_kontrahenta }} </td>
                 <td>{{ order.data_zlozenia | date("d/m/Y") }} </td>
@@ -34,14 +34,10 @@
     </table>
 {% endblock %}
 
-{%  block javascripts %}
+{% block javascripts %}
     {{ parent() }}
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <script type="text/javascript" charset="utf8"
-            src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
-    <script src="{{ asset('js/script.js') }}"></script>
-    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script type="text/javascript">
         {{ gc_draw(piechart, 'div_chart') }}
     </script>
+    <script type="text/javascript" src="{{ asset('js/order.js') }}"></script>
 {% endblock %}

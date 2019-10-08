@@ -1,0 +1,44 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+    {# Wykres kołowy #}
+    <div id="div_chart"></div>
+
+    {# Tabela #}
+    <h2>{{ title }} </h2>
+
+    <table class="display mdl-data-table" style="width:100%">
+        <thead>
+        <tr>
+            <th>Id klienta</th>
+            <th>Nazwa skrócona</th>
+            <th>Nazwa kontrahenta</th>
+            <th>Lączna wartość netto</th>
+            <th>Lączna wartość brutto</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        {% for order in order_max %}
+            <tr>
+                <td>{{ order.id }} </td>
+                <td>{{ order.nazwa_skrocona }} </td>
+                <td>{{ order.nazwa_kontrahenta }} </td>
+                <td>{{ order.laczna_wartosc_netto }} </td>
+                <td>{{ order.laczna_wartosc_brutto }} </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript">
+        {{ gc_draw(piechart, 'div_chart') }}
+    </script>
+    <script type="text/javascript" src="{{ asset('js/order-max.js') }}"></script>
+{% endblock %}

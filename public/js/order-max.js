@@ -1,7 +1,6 @@
 $(document).ready(function () {
     $('table.display').DataTable({
-        "iDisplayLength": 25,
-        "order": [[ 5, "desc" ]]
+        "iDisplayLength": 10,
+        "order": [[3, "desc" ]]
     });
-
 });

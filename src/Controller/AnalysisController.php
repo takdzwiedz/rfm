@@ -54,7 +54,7 @@ class AnalysisController extends AbstractController
     }
 
     /**
-     * @Route("/order", name="article_all")
+     * @Route("/order", name="analysis_order")
      * @return Response
      */
     public function order()
@@ -62,26 +62,31 @@ class AnalysisController extends AbstractController
         $title = 'Analiza zamówień';
 
         $orders = $this->connection->fetchAll(
-            'SELECT *
+            "SELECT 
+                    numer_zamowienia,
+                    k.nazwa_kontrahenta,
+                    data_zlozenia,
+                    wartosc_netto,
+                    wartosc_brutto
                 FROM zamowienia
                 LEFT JOIN kontrahenci k on zamowienia.id_kontrahenta = k.id_kontrahenta
                 ORDER BY wartosc_netto DESC
-                LIMIT 5');
+                LIMIT 10");
 
-//        dump($orders[0]['wartosc_netto']);
-//        dump($orders[1]['wartosc_netto']);
-//        dump($orders[2]['wartosc_netto']);
-//        dump($orders[3]['wartosc_netto']);
-//        dump($orders[4]['wartosc_netto']);die();
 
         $pieChart = new PieChart();
         $pieChart->getData()->setArrayToDataTable(
-            [['Kontrahent', 'Wartość zamowienia netto'],
-                [$orders[0]['nazwa_kontrahenta'],       11.2],
-                [$orders[1]['nazwa_kontrahenta'],       2],
-                [$orders[2]['nazwa_kontrahenta'],       2],
-                [$orders[3]['nazwa_kontrahenta'],       2],
-                [$orders[4]['nazwa_kontrahenta'],       7]
+            [['Nr zamówienia / kontrahent', 'Wartość zamowienia netto'],
+                [$orders[0]['numer_zamowienia'] . " / " . $orders[0]['nazwa_kontrahenta'], floatval($orders[0]['wartosc_netto'])],
+                [$orders[1]['numer_zamowienia'] . " / " . $orders[1]['nazwa_kontrahenta'], floatval($orders[1]['wartosc_netto'])],
+                [$orders[2]['numer_zamowienia'] . " / " . $orders[2]['nazwa_kontrahenta'], floatval($orders[2]['wartosc_netto'])],
+                [$orders[3]['numer_zamowienia'] . " / " . $orders[3]['nazwa_kontrahenta'], floatval($orders[3]['wartosc_netto'])],
+                [$orders[4]['numer_zamowienia'] . " / " . $orders[4]['nazwa_kontrahenta'], floatval($orders[4]['wartosc_netto'])],
+                [$orders[5]['numer_zamowienia'] . " / " . $orders[5]['nazwa_kontrahenta'], floatval($orders[5]['wartosc_netto'])],
+                [$orders[6]['numer_zamowienia'] . " / " . $orders[6]['nazwa_kontrahenta'], floatval($orders[6]['wartosc_netto'])],
+                [$orders[7]['numer_zamowienia'] . " / " . $orders[7]['nazwa_kontrahenta'], floatval($orders[7]['wartosc_netto'])],
+                [$orders[8]['numer_zamowienia'] . " / " . $orders[8]['nazwa_kontrahenta'], floatval($orders[8]['wartosc_netto'])],
+                [$orders[9]['numer_zamowienia'] . " / " . $orders[9]['nazwa_kontrahenta'], floatval($orders[9]['wartosc_netto'])]
             ]
         );
         $pieChart->getOptions()->setTitle('Najwieksze zamowienia');
@@ -102,5 +107,93 @@ class AnalysisController extends AbstractController
             ]
         );
     }
-}
 
+    /**
+     * @Route("/order_max", name="analysis_order_max")
+     */
+    public function orderMax()
+    {
+
+        $title = 'Klienci o najwyżeszej wartości zamówień w PLN';
+
+        $orderMax = $this->connection->fetchAll(
+            "SELECT 
+                        k.id id,
+                        nazwa_skrocona,
+                        nazwa_kontrahenta,
+                        sum(wartosc_netto)  laczna_wartosc_netto,
+                        sum(wartosc_brutto) laczna_wartosc_brutto
+                 FROM zamowienia z
+                         LEFT JOIN kontrahenci k on z.id_kontrahenta = k.id_kontrahenta
+                 WHERE czy_aktywny = 1
+                 GROUP BY z.id_kontrahenta
+                 ORDER BY laczna_wartosc_netto desc"
+        );
+
+        $tmp = 0;
+        $count = 0;
+        foreach($orderMax as $row) {
+            $count +=1;
+            if ($count > 9) {
+                $tmp += $row['laczna_wartosc_netto'];
+            }
+        }
+        $sumRest = floatval($tmp);
+
+        $pieChart = new PieChart();
+        $pieChart->getData()->setArrayToDataTable(
+            [['Kontrahent', 'Wartość zamowień netto'],
+                [$orderMax[0]['nazwa_kontrahenta'], floatval($orderMax[0]['laczna_wartosc_netto'])],
+                [$orderMax[1]['nazwa_kontrahenta'], floatval($orderMax[1]['laczna_wartosc_netto'])],
+                [$orderMax[2]['nazwa_kontrahenta'], floatval($orderMax[2]['laczna_wartosc_netto'])],
+                [$orderMax[3]['nazwa_kontrahenta'], floatval($orderMax[3]['laczna_wartosc_netto'])],
+                [$orderMax[4]['nazwa_kontrahenta'], floatval($orderMax[4]['laczna_wartosc_netto'])],
+                [$orderMax[5]['nazwa_kontrahenta'], floatval($orderMax[5]['laczna_wartosc_netto'])],
+                [$orderMax[6]['nazwa_kontrahenta'], floatval($orderMax[6]['laczna_wartosc_netto'])],
+                [$orderMax[7]['nazwa_kontrahenta'], floatval($orderMax[7]['laczna_wartosc_netto'])],
+                [$orderMax[8]['nazwa_kontrahenta'], floatval($orderMax[8]['laczna_wartosc_netto'])],
+                ['Reszta', $sumRest]
+            ]
+        );
+        $pieChart->getOptions()->setTitle($title);
+        $pieChart->getOptions()->setHeight(500);
+        $pieChart->getOptions()->setWidth(900);
+        $pieChart->getOptions()->getTitleTextStyle()->setBold(true);
+        $pieChart->getOptions()->getTitleTextStyle()->setColor('#009900');
+        $pieChart->getOptions()->getTitleTextStyle()->setItalic(true);
+        $pieChart->getOptions()->getTitleTextStyle()->setFontName('Arial');
+        $pieChart->getOptions()->getTitleTextStyle()->setFontSize(20);
+
+        return $this->render('analysis/order-max.html.twig', [
+            'order_max' => $orderMax,
+            'title' => $title,
+            'piechart' => $pieChart
+        ]);
+    }
+
+    /**
+     * @Route("/client", name="analysis_client" )
+     */
+    public function client()
+    {
+        $title = "Aktywni klienci";
+
+        $clients = $this->connection->fetchAll(
+            "
+            SELECT 
+                k.id id,
+                kg.nazwa_grupy nazwa_grupy,
+                k.nazwa_skrocona nazwa_skrocona,
+                k.nip nip,
+                k.nazwa_kontrahenta nazwa_kontrahenta
+            FROM kontrahenci k
+            LEFT JOIN kontrahenci_grupy kg on k.id_grupy = kg.id_grupy
+            WHERE czy_aktywny = 1
+            "
+        );
+        return $this->render('analysis/client.html.twig', [
+            'clients' => $clients,
+            'title' => $title
+        ]);
+    }
+}

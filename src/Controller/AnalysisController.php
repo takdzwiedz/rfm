@@ -19,7 +19,6 @@ class AnalysisController extends AbstractController
     public function __construct(
         Connection $connection)
     {
-
         $this->connection = $connection;
     }
 
@@ -132,8 +131,8 @@ class AnalysisController extends AbstractController
 
         $tmp = 0;
         $count = 0;
-        foreach($orderMax as $row) {
-            $count +=1;
+        foreach ($orderMax as $row) {
+            $count += 1;
             if ($count > 9) {
                 $tmp += $row['laczna_wartosc_netto'];
             }
@@ -193,6 +192,35 @@ class AnalysisController extends AbstractController
         );
         return $this->render('analysis/client.html.twig', [
             'clients' => $clients,
+            'title' => $title
+        ]);
+    }
+
+    /**
+     * @Route("/client_group", name="analysis_client_group")
+     */
+    public function clientGroup()
+    {
+        $title = "Ilość klientów w grupie";
+
+        $client_group = $this->connection->fetchAll(
+            "
+                SELECT k.id_grupy,
+                       kg.nazwa_grupy,
+                       count(k.id_grupy) ilosc_w_grupie,
+                       sum(z.wartosc_netto) wartosc_zamowien_netto,
+                       sum(z.wartosc_brutto) wartosc_zamowien_brutto
+                FROM kontrahenci k
+                         LEFT JOIN kontrahenci_grupy kg on k.id_grupy = kg.id_grupy
+                         LEFT JOIN zamowienia z on k.id_kontrahenta = z.id_kontrahenta
+                WHERE czy_aktywny = 1
+                GROUP BY k.id_grupy
+                ORDER BY ilosc_w_grupie DESC            
+            "
+        );
+
+        return $this->render('analysis/client-group.html.twig', [
+            'client_group' => $client_group,
             'title' => $title
         ]);
     }

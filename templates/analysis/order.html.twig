@@ -2,6 +2,12 @@
 
 {% block title %}{{ title }}{% endblock %}
 
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/order.css') }}">
+
+{% endblock %}
+
 {% block body %}
 
     <h2>{{ orders | length }} największych zamówień</h2>
@@ -16,8 +22,8 @@
             <th>Nr zamówienia</th>
             <th>Nazwa kontrahenta</th>
             <th>data złożenia</th>
-            <th>Wartość netto</th>
-            <th>Wartość brutto</th>
+            <th class="net-value">Wartość netto</th>
+            <th class="gross-value">Wartość brutto</th>
         </tr>
         </thead>
         <tbody>
@@ -26,8 +32,8 @@
                 <td>{{ order.numer_zamowienia }} </td>
                 <td>{{ order.nazwa_kontrahenta }} </td>
                 <td>{{ order.data_zlozenia | date("d/m/Y") }} </td>
-                <td>{{ order.wartosc_netto | number_format(2, ',') }} </td>
-                <td>{{ order.wartosc_brutto | number_format(2, ',') }} </td>
+                <td class="net-value">{{ order.wartosc_netto | number_format(2, ',') }} </td>
+                <td class="gross-value">{{ order.wartosc_brutto | number_format(2, ',') }} </td>
             </tr>
         {% endfor %}
         </tbody>

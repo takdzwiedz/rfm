@@ -1,0 +1,49 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/client-group.css') }}">
+
+{% endblock %}
+
+{% block body %}
+
+    <h2>{{ title }}</h2>
+
+    {# Wykres kołowy #}
+    <div id="div_chart"></div>
+
+    {# Tabela #}
+    <table id="example" class="display mdl-data-table" style="width:100%">
+        <thead>
+        <tr>
+            <th>Id grupy</th>
+            <th>Nazwa grupy</th>
+            <th class="">Ilość kontrhentów w grupie</th>
+            <th class="">Wartość zakupów w grupie netto</th>
+            <th class="gross-value">Wartość zakupów w grupie brutto</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for group in client_group %}
+            <tr>
+                <td>{{ group.id_grupy }} </td>
+                <td>{{ group.nazwa_grupy }} </td>
+                <td class="contractor">{{ group.ilosc_w_grupie }} </td>
+                <td class="net-value">{{ group.wartosc_zamowien_netto }}</td>
+                <td>{{ group.wartosc_zamowien_brutto }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript">
+
+    </script>
+    <script type="text/javascript" src="{{ asset('js/client-group.js') }}"></script>
+{% endblock %}

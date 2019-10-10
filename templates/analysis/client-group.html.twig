@@ -5,7 +5,6 @@
 {% block stylesheets %}
     {{ parent() }}
     <link rel="stylesheet" type="text/css" href="{{ asset('css/client-group.css') }}">
-
 {% endblock %}
 
 {% block body %}
@@ -13,7 +12,7 @@
     <h2>{{ title }}</h2>
 
     {# Wykres kołowy #}
-    <div id="div_chart"></div>
+    <div id="div_bar"></div>
 
     {# Tabela #}
     <table id="example" class="display mdl-data-table" style="width:100%">
@@ -43,7 +42,7 @@
 {% block javascripts %}
     {{ parent() }}
     <script type="text/javascript">
-
+        {{ gc_draw(bar_chart, 'div_bar') }}
     </script>
     <script type="text/javascript" src="{{ asset('js/client-group.js') }}"></script>
 {% endblock %}

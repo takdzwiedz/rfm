@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Artykuly;
+use CMEN\GoogleChartsBundle\GoogleCharts\Charts\Material\BarChart;
 use CMEN\GoogleChartsBundle\GoogleCharts\Charts\PieChart;
 use Doctrine\DBAL\Driver\Connection;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -72,22 +73,19 @@ class AnalysisController extends AbstractController
                 ORDER BY wartosc_netto DESC
                 LIMIT 10");
 
+        $arr = [
+            ['Nr zamówienia / kontrahent', 'Wartość zamowienia netto']
+        ];
+        for ($i = 0; $i < 10; $i++) {
+            if ($orders[$i]) {
+                $arr[] = [
+                    $orders[$i]['numer_zamowienia'] . " / " . $orders[$i]['nazwa_kontrahenta'], floatval($orders[$i]['wartosc_netto'])
+                ];
+            }
+        }
 
         $pieChart = new PieChart();
-        $pieChart->getData()->setArrayToDataTable(
-            [['Nr zamówienia / kontrahent', 'Wartość zamowienia netto'],
-                [$orders[0]['numer_zamowienia'] . " / " . $orders[0]['nazwa_kontrahenta'], floatval($orders[0]['wartosc_netto'])],
-                [$orders[1]['numer_zamowienia'] . " / " . $orders[1]['nazwa_kontrahenta'], floatval($orders[1]['wartosc_netto'])],
-                [$orders[2]['numer_zamowienia'] . " / " . $orders[2]['nazwa_kontrahenta'], floatval($orders[2]['wartosc_netto'])],
-                [$orders[3]['numer_zamowienia'] . " / " . $orders[3]['nazwa_kontrahenta'], floatval($orders[3]['wartosc_netto'])],
-                [$orders[4]['numer_zamowienia'] . " / " . $orders[4]['nazwa_kontrahenta'], floatval($orders[4]['wartosc_netto'])],
-                [$orders[5]['numer_zamowienia'] . " / " . $orders[5]['nazwa_kontrahenta'], floatval($orders[5]['wartosc_netto'])],
-                [$orders[6]['numer_zamowienia'] . " / " . $orders[6]['nazwa_kontrahenta'], floatval($orders[6]['wartosc_netto'])],
-                [$orders[7]['numer_zamowienia'] . " / " . $orders[7]['nazwa_kontrahenta'], floatval($orders[7]['wartosc_netto'])],
-                [$orders[8]['numer_zamowienia'] . " / " . $orders[8]['nazwa_kontrahenta'], floatval($orders[8]['wartosc_netto'])],
-                [$orders[9]['numer_zamowienia'] . " / " . $orders[9]['nazwa_kontrahenta'], floatval($orders[9]['wartosc_netto'])]
-            ]
-        );
+        $pieChart->getData()->setArrayToDataTable($arr);
         $pieChart->getOptions()->setTitle('Najwieksze zamowienia');
         $pieChart->getOptions()->setHeight(500);
         $pieChart->getOptions()->setWidth(900);
@@ -96,7 +94,6 @@ class AnalysisController extends AbstractController
         $pieChart->getOptions()->getTitleTextStyle()->setItalic(true);
         $pieChart->getOptions()->getTitleTextStyle()->setFontName('Arial');
         $pieChart->getOptions()->getTitleTextStyle()->setFontSize(20);
-
 
         return $this->render(
             'analysis/order.html.twig', [
@@ -114,7 +111,6 @@ class AnalysisController extends AbstractController
     {
 
         $title = 'Klienci o najwyżeszej wartości zamówień w PLN';
-
         $orderMax = $this->connection->fetchAll(
             "SELECT 
                         k.id id,
@@ -129,31 +125,21 @@ class AnalysisController extends AbstractController
                  ORDER BY laczna_wartosc_netto desc"
         );
 
-        $tmp = 0;
-        $count = 0;
-        foreach ($orderMax as $row) {
-            $count += 1;
-            if ($count > 9) {
-                $tmp += $row['laczna_wartosc_netto'];
+        if($orderMax) {
+            $arr = [
+                ['Kontrahent', 'Wartość zamowień netto']
+            ];
+            foreach ($orderMax as $order) {
+
+                $arr[] = [
+                    $order['nazwa_kontrahenta'],
+                    floatval($order['laczna_wartosc_netto'])
+                ];
             }
         }
-        $sumRest = floatval($tmp);
 
         $pieChart = new PieChart();
-        $pieChart->getData()->setArrayToDataTable(
-            [['Kontrahent', 'Wartość zamowień netto'],
-                [$orderMax[0]['nazwa_kontrahenta'], floatval($orderMax[0]['laczna_wartosc_netto'])],
-                [$orderMax[1]['nazwa_kontrahenta'], floatval($orderMax[1]['laczna_wartosc_netto'])],
-                [$orderMax[2]['nazwa_kontrahenta'], floatval($orderMax[2]['laczna_wartosc_netto'])],
-                [$orderMax[3]['nazwa_kontrahenta'], floatval($orderMax[3]['laczna_wartosc_netto'])],
-                [$orderMax[4]['nazwa_kontrahenta'], floatval($orderMax[4]['laczna_wartosc_netto'])],
-                [$orderMax[5]['nazwa_kontrahenta'], floatval($orderMax[5]['laczna_wartosc_netto'])],
-                [$orderMax[6]['nazwa_kontrahenta'], floatval($orderMax[6]['laczna_wartosc_netto'])],
-                [$orderMax[7]['nazwa_kontrahenta'], floatval($orderMax[7]['laczna_wartosc_netto'])],
-                [$orderMax[8]['nazwa_kontrahenta'], floatval($orderMax[8]['laczna_wartosc_netto'])],
-                ['Reszta', $sumRest]
-            ]
-        );
+        $pieChart->getData()->setArrayToDataTable($arr);
         $pieChart->getOptions()->setTitle($title);
         $pieChart->getOptions()->setHeight(500);
         $pieChart->getOptions()->setWidth(900);
@@ -190,6 +176,7 @@ class AnalysisController extends AbstractController
             WHERE czy_aktywny = 1
             "
         );
+
         return $this->render('analysis/client.html.twig', [
             'clients' => $clients,
             'title' => $title
@@ -203,7 +190,7 @@ class AnalysisController extends AbstractController
     {
         $title = "Ilość klientów w grupie";
 
-        $client_group = $this->connection->fetchAll(
+        $clientGroup = $this->connection->fetchAll(
             "
                 SELECT k.id_grupy,
                        kg.nazwa_grupy,
@@ -219,8 +206,37 @@ class AnalysisController extends AbstractController
             "
         );
 
+        if($clientGroup){
+            $arr = [
+                ['Nazwa grupy', 'Ilość kontrahentów w grupie', 'Wartość zamówień netto'],
+            ];
+
+            foreach ($clientGroup as $client) {
+                $arr[] = [
+                    $client['nazwa_grupy'],
+                    floatval($client['ilosc_w_grupie']),
+                    floatval($client['wartosc_zamowien_netto'])
+                ];
+            }
+        }
+
+        $chart = new BarChart();
+        $chart->getData()->setArrayToDataTable($arr);
+        $chart->getOptions()->getChart()
+            ->setTitle('Ilość kontrhentów w grupie')
+            ->setSubtitle('łaczna wartość zamówień netto');
+        $chart->getOptions()
+            ->setHeight(700)
+            ->setWidth(1100)
+            ->setSeries([['axis' => 'value'], ['axis' => 'quantity']])
+            ->setAxes(['x' => [
+                'value' => ['label' => 'łaczna wartość zamówień netto'],
+                'quantity' => ['side' => 'top', 'label' => 'ilość kontrahentów w grupie']]
+            ]);
+
         return $this->render('analysis/client-group.html.twig', [
-            'client_group' => $client_group,
+            'client_group' => $clientGroup,
+            'bar_chart' => $chart,
             'title' => $title
         ]);
     }

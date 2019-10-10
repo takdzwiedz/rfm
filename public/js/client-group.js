@@ -3,7 +3,7 @@ $(document).ready(function () {
     const table = $('#example').DataTable({
         orderCellsTop: true,
         fixedHeader: true,
-        // order: [[ 2, "desc" ]]
+        order: [[ 2, "desc" ]]
 
     });
     $('#example thead tr').clone(true).appendTo('#example thead');

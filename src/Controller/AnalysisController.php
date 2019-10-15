@@ -71,22 +71,23 @@ class AnalysisController extends AbstractController
                 FROM zamowienia
                 LEFT JOIN kontrahenci k on zamowienia.id_kontrahenta = k.id_kontrahenta
                 ORDER BY wartosc_netto DESC
-                LIMIT 10");
+                ");
 
         $arr = [
             ['Nr zamówienia / kontrahent', 'Wartość zamowienia netto']
         ];
-        for ($i = 0; $i < 10; $i++) {
-            if ($orders[$i]) {
+        if($orders) {
+            foreach ($orders as $order) {
                 $arr[] = [
-                    $orders[$i]['numer_zamowienia'] . " / " . $orders[$i]['nazwa_kontrahenta'], floatval($orders[$i]['wartosc_netto'])
+                    $order['numer_zamowienia'] . " / " . $order['nazwa_kontrahenta'], floatval($order['wartosc_netto'])
                 ];
             }
         }
 
+
         $pieChart = new PieChart();
         $pieChart->getData()->setArrayToDataTable($arr);
-        $pieChart->getOptions()->setTitle('Najwieksze zamowienia');
+        $pieChart->getOptions()->setTitle('');
         $pieChart->getOptions()->setHeight(500);
         $pieChart->getOptions()->setWidth(900);
         $pieChart->getOptions()->getTitleTextStyle()->setBold(true);

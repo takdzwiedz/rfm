@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="App\Entity\UserAuth" table="user_auth">
+    <indexes>
+      <index name="data_dodania" columns="data_dodania"/>
+      <index name="id_dzialu" columns="id_dzialu"/>
+    </indexes>
+    <id name="idAuth" type="integer" column="id_auth">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="username" type="string" column="username" length="150" nullable="false">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="password" type="string" column="password" length="50" nullable="false">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="rodzajUser" type="boolean" column="rodzaj_user" nullable="false"/>
+    <field name="imieNazwisko" type="string" column="imie_nazwisko" length="255" nullable="false">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="opisUzytkownika" type="string" column="opis_uzytkownika" length="255" nullable="false">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="adresEmail" type="string" column="adres_email" length="255" nullable="false">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="czyAktywny" type="boolean" column="czy_aktywny" nullable="false">
+      <options>
+        <option name="default">1</option>
+      </options>
+    </field>
+    <field name="czyUsuniety" type="boolean" column="czy_usuniety" nullable="false">
+      <options>
+        <option name="default">0</option>
+      </options>
+    </field>
+    <field name="telefon" type="string" column="telefon" length="20" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="dataDodania" type="datetime" column="data_dodania" nullable="true"/>
+    <field name="idUserSolal" type="integer" column="id_user_solal" nullable="true">
+      <options>
+        <option name="unsigned">1</option>
+        <option name="default">0</option>
+      </options>
+    </field>
+    <field name="passwordOld" type="string" column="password_old" length="50" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="idJednostki" type="integer" column="id_jednostki" nullable="true">
+      <options>
+        <option name="unsigned">1</option>
+        <option name="default">0</option>
+      </options>
+    </field>
+    <field name="idDzialu" type="integer" column="id_dzialu" nullable="true">
+      <options>
+        <option name="unsigned">1</option>
+        <option name="default">0</option>
+      </options>
+    </field>
+    <field name="idAuthAkceptuj" type="integer" column="id_auth_akceptuj" nullable="true">
+      <options>
+        <option name="unsigned">1</option>
+        <option name="default">0</option>
+      </options>
+    </field>
+    <field name="zmianaHasla" type="boolean" column="zmiana_hasla" nullable="true">
+      <options>
+        <option name="default">0</option>
+      </options>
+    </field>
+    <field name="idJezyka" type="boolean" column="id_jezyka" nullable="true">
+      <options>
+        <option name="default">1</option>
+      </options>
+    </field>
+    <field name="ograniczCennik" type="boolean" column="ogranicz_cennik" nullable="true">
+      <options>
+        <option name="default">0</option>
+      </options>
+    </field>
+    <field name="czyMinikatalog" type="boolean" column="czy_minikatalog" nullable="true">
+      <options>
+        <option name="default">0</option>
+      </options>
+    </field>
+    <field name="poziomAkceptuj" type="boolean" column="poziom_akceptuj" nullable="true">
+      <options>
+        <option name="default">3</option>
+      </options>
+    </field>
+    <field name="poziomKatalog" type="boolean" column="poziom_katalog" nullable="true">
+      <options>
+        <option name="default">1</option>
+      </options>
+    </field>
+    <field name="czyStanSie" type="boolean" column="czy_stan_sie" nullable="true">
+      <options>
+        <option name="default">0</option>
+      </options>
+    </field>
+    <field name="czyWidziCeny" type="boolean" column="czy_widzi_ceny" nullable="true">
+      <options>
+        <option name="default">0</option>
+      </options>
+    </field>
+    <field name="czyWidziPromocje" type="boolean" column="czy_widzi_promocje" nullable="true">
+      <options>
+        <option name="default">0</option>
+      </options>
+    </field>
+    <field name="czyProgramLojalnosciowy" type="boolean" column="czy_program_lojalnosciowy" nullable="true">
+      <options>
+        <option name="default">0</option>
+      </options>
+    </field>
+    <field name="idDomyslnyAdresFaktury" type="integer" column="id_domyslny_adres_faktury" nullable="true">
+      <options>
+        <option name="unsigned">1</option>
+        <option name="default">0</option>
+      </options>
+    </field>
+    <field name="idDomyslnyAdresDostawy" type="integer" column="id_domyslny_adres_dostawy" nullable="true">
+      <options>
+        <option name="unsigned">1</option>
+        <option name="default">0</option>
+      </options>
+    </field>
+    <field name="statusPotwierdzil" type="boolean" column="status_potwierdzil" nullable="true"/>
+    <field name="dataPotwierdzil" type="datetime" column="data_potwierdzil" nullable="true"/>
+    <field name="akcjaBudzet" type="boolean" column="akcja_budzet" nullable="true">
+      <options>
+        <option name="default">1</option>
+      </options>
+    </field>
+    <field name="czyTestowe" type="boolean" column="czy_testowe" nullable="true">
+      <options>
+        <option name="default">0</option>
+      </options>
+    </field>
+    <field name="czyMailPrzelogowanie" type="boolean" column="czy_mail_przelogowanie" nullable="true">
+      <options>
+        <option name="default">0</option>
+      </options>
+    </field>
+    <field name="dataMailPrzelogowanie" type="datetime" column="data_mail_przelogowanie" nullable="true"/>
+    <field name="czyKlauzulaRodo" type="boolean" column="czy_klauzula_rodo" nullable="true"/>
+    <field name="czyRegulaminPolityka" type="boolean" column="czy_regulamin_polityka" nullable="true"/>
+    <field name="dataZgody" type="datetime" column="data_zgody" nullable="true"/>
+    <field name="ipZgody" type="string" column="ip_zgody" length="30" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="idRejestracji" type="integer" column="id_rejestracji" nullable="true">
+      <options>
+        <option name="unsigned">1</option>
+        <option name="default">0</option>
+      </options>
+    </field>
+    <field name="idModuly" type="boolean" column="id_moduly" nullable="true">
+      <options>
+        <option name="default">1</option>
+      </options>
+    </field>
+    <field name="idPracownika" type="integer" column="id_pracownika" nullable="true">
+      <options>
+        <option name="unsigned">1</option>
+        <option name="default">0</option>
+      </options>
+    </field>
+  </entity>
+</doctrine-mapping>

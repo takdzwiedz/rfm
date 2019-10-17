@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="App\Entity\ArtykulyCechyKategorie" table="artykuly_cechy_kategorie">
+    <indexes>
+      <index name="id_cechy" columns="id_cechy"/>
+      <index name="id_kategorii" columns="id_kategorii"/>
+    </indexes>
+    <id name="id" type="integer" column="id">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="idKategorii" type="integer" column="id_kategorii" nullable="true">
+      <options>
+        <option name="unsigned">1</option>
+      </options>
+    </field>
+    <field name="idCechy" type="integer" column="id_cechy" nullable="true">
+      <options>
+        <option name="unsigned">1</option>
+      </options>
+    </field>
+    <field name="czyFiltrowanie" type="boolean" column="czy_filtrowanie" nullable="true">
+      <options>
+        <option name="default">1</option>
+      </options>
+    </field>
+  </entity>
+</doctrine-mapping>

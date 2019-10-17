@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="App\Entity\ZamowieniaPozycje" table="zamowienia_pozycje">
+    <indexes>
+      <index name="id_artykulu" columns="id_artykulu"/>
+      <index name="id_ezamowienia" columns="id_ezamowienia"/>
+    </indexes>
+    <id name="idEzamowieniaPozycje" type="bigint" column="id_ezamowienia_pozycje">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="idZamowieniaPozycje" type="bigint" column="id_zamowienia_pozycje" nullable="false">
+      <options>
+        <option name="unsigned">1</option>
+      </options>
+    </field>
+    <field name="idEzamowienia" type="bigint" column="id_ezamowienia" nullable="false">
+      <options>
+        <option name="unsigned">1</option>
+      </options>
+    </field>
+    <field name="idZamowienia" type="bigint" column="id_zamowienia" nullable="false">
+      <options>
+        <option name="unsigned">1</option>
+      </options>
+    </field>
+    <field name="idArtykulu" type="integer" column="id_artykulu" nullable="false">
+      <options>
+        <option name="unsigned">1</option>
+      </options>
+    </field>
+    <field name="ilosc" type="integer" column="ilosc" nullable="false">
+      <options>
+        <option name="unsigned">1</option>
+      </options>
+    </field>
+    <field name="cenaNetto" type="float" column="cena_netto" precision="8" scale="2" nullable="false"/>
+    <field name="cenaBrutto" type="float" column="cena_brutto" precision="8" scale="2" nullable="false"/>
+    <field name="narzut" type="float" column="narzut" precision="10" scale="0" nullable="false"/>
+    <field name="zarezerwuj" type="integer" column="zarezerwuj" nullable="true">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="znakRabat" type="boolean" column="znak_rabat" nullable="true"/>
+    <field name="zrealizowano" type="integer" column="zrealizowano" nullable="true">
+      <options>
+        <option name="unsigned"/>
+        <option name="default">0</option>
+      </options>
+    </field>
+    <field name="dodanoWfmag" type="boolean" column="dodano_wfmag" nullable="true">
+      <options>
+        <option name="default">0</option>
+      </options>
+    </field>
+    <field name="idPromocjaWersja" type="integer" column="id_promocja_wersja" nullable="true">
+      <options>
+        <option name="unsigned">1</option>
+        <option name="default">0</option>
+      </options>
+    </field>
+  </entity>
+</doctrine-mapping>

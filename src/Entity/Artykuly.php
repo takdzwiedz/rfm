@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Artykuly
  *
- * @ORM\Table(name="artykuly", indexes={@ORM\Index(name="id_kategorii", columns={"id_kategorii"}), @ORM\Index(name="id_artykulu_wfmag", columns={"id_artykulu_wfmag"}), @ORM\Index(name="nazwa_artykulu", columns={"nazwa_artykulu"}), @ORM\Index(name="id_ekategorii", columns={"id_ekategorii"}), @ORM\Index(name="czy_widoczny", columns={"czy_widoczny"}), @ORM\Index(name="indeks_artykulu", columns={"indeks_artykulu"})})
+ * @ORM\Table(name="artykuly", indexes={@ORM\Index(name="indeks_artykulu", columns={"indeks_artykulu"}), @ORM\Index(name="id_ekategorii", columns={"id_ekategorii"}), @ORM\Index(name="czy_widoczny", columns={"czy_widoczny"}), @ORM\Index(name="nazwa_artykulu", columns={"nazwa_artykulu"}), @ORM\Index(name="id_kategorii", columns={"id_kategorii"}), @ORM\Index(name="id_artykulu_wfmag", columns={"id_artykulu_wfmag"})})
  * @ORM\Entity
  */
 class Artykuly
@@ -103,35 +103,35 @@ class Artykuly
      *
      * @ORM\Column(name="czy_usuniety", type="boolean", nullable=true)
      */
-    private $czyUsuniety = '0';
+    private $czyUsuniety;
 
     /**
      * @var bool|null
      *
      * @ORM\Column(name="czy_gratis", type="boolean", nullable=true)
      */
-    private $czyGratis = '0';
+    private $czyGratis;
 
     /**
      * @var bool|null
      *
      * @ORM\Column(name="czy_nagroda", type="boolean", nullable=true)
      */
-    private $czyNagroda = '0';
+    private $czyNagroda;
 
     /**
      * @var int|null
      *
      * @ORM\Column(name="id_artykulu_wfmag", type="bigint", nullable=true, options={"unsigned"=true})
      */
-    private $idArtykuluWfmag = '0';
+    private $idArtykuluWfmag;
 
     /**
      * @var int|null
      *
      * @ORM\Column(name="id_artykulu_prod", type="bigint", nullable=true, options={"unsigned"=true})
      */
-    private $idArtykuluProd = '0';
+    private $idArtykuluProd;
 
     /**
      * @var int
@@ -159,7 +159,7 @@ class Artykuly
      *
      * @ORM\Column(name="czy_usluga", type="boolean", nullable=true)
      */
-    private $czyUsluga = '0';
+    private $czyUsluga;
 
     /**
      * @var int|null
@@ -215,7 +215,7 @@ class Artykuly
      *
      * @ORM\Column(name="czy_zaktualizowano_temp", type="boolean", nullable=true)
      */
-    private $czyZaktualizowanoTemp = '0';
+    private $czyZaktualizowanoTemp;
 
     /**
      * @var float|null
@@ -236,28 +236,28 @@ class Artykuly
      *
      * @ORM\Column(name="wyswietlen", type="integer", nullable=true, options={"unsigned"=true})
      */
-    private $wyswietlen = '0';
+    private $wyswietlen;
 
     /**
      * @var int|null
      *
      * @ORM\Column(name="stan_minimalny", type="integer", nullable=true, options={"unsigned"=true})
      */
-    private $stanMinimalny = '0';
+    private $stanMinimalny;
 
     /**
      * @var bool|null
      *
      * @ORM\Column(name="czy_zdjecie", type="boolean", nullable=true)
      */
-    private $czyZdjecie = '0';
+    private $czyZdjecie;
 
     /**
      * @var int|null
      *
      * @ORM\Column(name="punkty_nagroda", type="integer", nullable=true)
      */
-    private $punktyNagroda = '0';
+    private $punktyNagroda;
 
     /**
      * @var bool|null
@@ -290,7 +290,7 @@ class Artykuly
     /**
      * @var float|null
      *
-     * @ORM\Column(name="cena_import", type="float", precision=8, scale=2, nullable=true)
+     * @ORM\Column(name="cena_import", type="float", precision=10, scale=0, nullable=true)
      */
     private $cenaImport;
 
@@ -299,28 +299,28 @@ class Artykuly
      *
      * @ORM\Column(name="czy_cena_wfmag", type="boolean", nullable=true)
      */
-    private $czyCenaWfmag = '0';
+    private $czyCenaWfmag;
 
     /**
      * @var bool|null
      *
      * @ORM\Column(name="czy_jedn_wfmag", type="boolean", nullable=true)
      */
-    private $czyJednWfmag = '0';
+    private $czyJednWfmag;
 
     /**
      * @var bool|null
      *
      * @ORM\Column(name="id_kategorii_program", type="boolean", nullable=true)
      */
-    private $idKategoriiProgram = '0';
+    private $idKategoriiProgram;
 
     /**
      * @var int|null
      *
      * @ORM\Column(name="p_core_id", type="integer", nullable=true, options={"unsigned"=true})
      */
-    private $pCoreId = '0';
+    private $pCoreId;
 
     /**
      * @var int|null
@@ -355,7 +355,7 @@ class Artykuly
      *
      * @ORM\Column(name="id_artykulu_grupuj", type="integer", nullable=true, options={"unsigned"=true})
      */
-    private $idArtykuluGrupuj = '0';
+    private $idArtykuluGrupuj;
 
     /**
      * @var string|null

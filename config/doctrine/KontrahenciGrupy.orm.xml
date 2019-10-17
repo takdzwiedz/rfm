@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="App\Entity\KontrahenciGrupy" table="kontrahenci_grupy">
+    <id name="id" type="bigint" column="id">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="idGrupy" type="integer" column="id_grupy" nullable="false">
+      <options>
+        <option name="unsigned">1</option>
+      </options>
+    </field>
+    <field name="nazwaGrupy" type="string" column="nazwa_grupy" length="255" nullable="false">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="opisGrupy" type="text" column="opis_grupy" length="255" nullable="false">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="narzut" type="float" column="narzut" precision="8" scale="2" nullable="true"/>
+    <field name="idCeny" type="integer" column="id_ceny" nullable="true">
+      <options>
+        <option name="unsigned">1</option>
+      </options>
+    </field>
+  </entity>
+</doctrine-mapping>

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="App\Entity\ArtykulyCechy" table="artykuly_cechy">
+    <indexes>
+      <index name="czy_widoczna" columns="czy_widoczna"/>
+    </indexes>
+    <id name="idCechy" type="integer" column="id_cechy">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="poleWfmag" type="string" column="pole_wfmag" length="100" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="nazwaCechyWfmag" type="string" column="nazwa_cechy_wfmag" length="100" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="czyWidoczna" type="boolean" column="czy_widoczna" nullable="true">
+      <options>
+        <option name="default">1</option>
+      </options>
+    </field>
+    <field name="kolejnosc" type="boolean" column="kolejnosc" nullable="true"/>
+    <field name="czyWfmag" type="boolean" column="czy_wfmag" nullable="true">
+      <options>
+        <option name="default">0</option>
+      </options>
+    </field>
+    <field name="idKategorii" type="integer" column="id_kategorii" nullable="true">
+      <options>
+        <option name="unsigned">1</option>
+        <option name="default">0</option>
+      </options>
+    </field>
+    <field name="idFilteringBak" type="integer" column="id_filtering_bak" nullable="true">
+      <options>
+        <option name="unsigned">1</option>
+      </options>
+    </field>
+    <field name="nazwaCechyTemp" type="string" column="nazwa_cechy_temp" length="255" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="czyFiltrowanie" type="boolean" column="czy_filtrowanie" nullable="true">
+      <options>
+        <option name="default">0</option>
+      </options>
+    </field>
+    <field name="pochodzenie" type="boolean" column="pochodzenie" nullable="true">
+      <options>
+        <option name="comment">1 - wfmag, 2 - honeti, 3 - ręcznie</option>
+        <option name="default">1</option>
+      </options>
+    </field>
+    <field name="typCechy" type="boolean" column="typ_cechy" nullable="true">
+      <options>
+        <option name="default">1</option>
+      </options>
+    </field>
+  </entity>
+</doctrine-mapping>

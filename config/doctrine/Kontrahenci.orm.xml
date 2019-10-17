@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="App\Entity\Kontrahenci" table="kontrahenci">
+    <id name="id" type="integer" column="id">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="idGrupy" type="integer" column="id_grupy" nullable="false">
+      <options>
+        <option name="unsigned">1</option>
+      </options>
+    </field>
+    <field name="idEgrupy" type="integer" column="id_egrupy" nullable="false">
+      <options>
+        <option name="unsigned">1</option>
+      </options>
+    </field>
+    <field name="nazwaSkrocona" type="string" column="nazwa_skrocona" length="255" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="nazwaKontrahenta" type="string" column="nazwa_kontrahenta" length="255" nullable="false">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="kodKontrahenta" type="string" column="kod_kontrahenta" length="15" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="kod" type="string" column="kod" length="6" nullable="false">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="miasto" type="string" column="miasto" length="255" nullable="false">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="idPlatnika" type="bigint" column="id_platnika" nullable="true">
+      <options>
+        <option name="unsigned">1</option>
+      </options>
+    </field>
+    <field name="idKlasyfikacji" type="integer" column="id_klasyfikacji" nullable="true">
+      <options>
+        <option name="unsigned">1</option>
+      </options>
+    </field>
+    <field name="idHandlowca" type="integer" column="id_handlowca" nullable="true">
+      <options>
+        <option name="unsigned">1</option>
+      </options>
+    </field>
+    <field name="idOpiekuna" type="boolean" column="id_opiekuna" nullable="false"/>
+    <field name="czyTylkoBufor" type="boolean" column="czy_tylko_bufor" nullable="false"/>
+    <field name="limitKupiecki" type="float" column="limit_kupiecki" precision="10" scale="0" nullable="false"/>
+    <field name="minimumLogistyczne" type="float" column="minimum_logistyczne" precision="8" scale="2" nullable="false"/>
+    <field name="domyslnyRabat" type="float" column="domyslny_rabat" precision="10" scale="0" nullable="false"/>
+    <field name="czyZablokowany" type="boolean" column="czy_zablokowany" nullable="true">
+      <options>
+        <option name="default">0</option>
+      </options>
+    </field>
+    <field name="czyUsuniety" type="boolean" column="czy_usuniety" nullable="true">
+      <options>
+        <option name="default">0</option>
+      </options>
+    </field>
+    <field name="czyAktywny" type="boolean" column="czy_aktywny" nullable="true">
+      <options>
+        <option name="default">0</option>
+      </options>
+    </field>
+    <field name="idKontrahenta" type="integer" column="id_kontrahenta" nullable="true">
+      <options>
+        <option name="unsigned">1</option>
+        <option name="default">0</option>
+      </options>
+    </field>
+    <field name="companiesId" type="integer" column="companies_id" nullable="true">
+      <options>
+        <option name="unsigned">1</option>
+      </options>
+    </field>
+    <field name="nip" type="string" column="nip" length="20" nullable="false">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="regon" type="string" column="regon" length="15" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="ulica" type="string" column="ulica" length="255" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="aktualizujWfmag" type="boolean" column="aktualizuj_wfmag" nullable="true">
+      <options>
+        <option name="default">0</option>
+      </options>
+    </field>
+    <field name="uwagi" type="string" column="uwagi" length="255" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="dataRejestracji" type="datetime" column="data_rejestracji" nullable="true"/>
+    <field name="ograniczCennik" type="boolean" column="ogranicz_cennik" nullable="true">
+      <options>
+        <option name="default">0</option>
+      </options>
+    </field>
+    <field name="czyProgramLojalnosciowy" type="boolean" column="czy_program_lojalnosciowy" nullable="true">
+      <options>
+        <option name="default">0</option>
+      </options>
+    </field>
+    <field name="przelicznikProgram" type="float" column="przelicznik_program" precision="6" scale="2" nullable="true"/>
+    <field name="darmowaDostawa" type="boolean" column="darmowa_dostawa" nullable="true">
+      <options>
+        <option name="default">0</option>
+      </options>
+    </field>
+    <field name="kosztDostawa" type="float" column="koszt_dostawa" precision="6" scale="2" nullable="true">
+      <options>
+        <option name="default">0.00</option>
+      </options>
+    </field>
+    <field name="pole4" type="string" column="pole4" length="255" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+  </entity>
+</doctrine-mapping>

@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="App\Entity\Ekategorie" table="ekategorie">
+    <id name="idKategorii" type="integer" column="id_kategorii">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="updatePersonId" type="bigint" column="update_person_id" nullable="false">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="createPersonId" type="bigint" column="create_person_id" nullable="false">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="publicationStateId" type="integer" column="publication_state_id" nullable="false">
+      <options>
+        <option name="unsigned">1</option>
+      </options>
+    </field>
+    <field name="pCatalogId" type="bigint" column="p_catalog_id" nullable="false">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="idOjca" type="integer" column="id_ojca" nullable="true">
+      <options>
+        <option name="unsigned">1</option>
+      </options>
+    </field>
+    <field name="nazwaKategorii" type="string" column="nazwa_kategorii" length="255" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="publicationDateFrom" type="datetime" column="publication_date_from" nullable="true"/>
+    <field name="publicationDateTo" type="datetime" column="publication_date_to" nullable="true"/>
+    <field name="publicationAlways" type="boolean" column="publication_always" nullable="false">
+      <options>
+        <option name="default">1</option>
+      </options>
+    </field>
+    <field name="photoUrlTh" type="string" column="photo_url_th" length="255" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="photoUrl" type="string" column="photo_url" length="255" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="active" type="boolean" column="active" nullable="false">
+      <options>
+        <option name="default">1</option>
+      </options>
+    </field>
+    <field name="sort" type="integer" column="sort" nullable="false">
+      <options>
+        <option name="unsigned"/>
+        <option name="default">100</option>
+      </options>
+    </field>
+    <field name="htmlDesc" type="text" column="html_desc" length="65535" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="creationDate" type="datetime" column="creation_date" nullable="true"/>
+    <field name="updateDate" type="datetime" column="update_date" nullable="true"/>
+    <field name="lft" type="bigint" column="lft" nullable="true">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="rgt" type="bigint" column="rgt" nullable="true">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="localeId" type="string" column="locale_id" length="20" nullable="false">
+      <options>
+        <option name="fixed">1</option>
+        <option name="default">pl_PL</option>
+      </options>
+    </field>
+    <field name="htmlDescShort" type="text" column="html_desc_short" length="65535" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="links" type="text" column="links" length="65535" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="slider" type="text" column="slider" length="65535" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="someParentInactive" type="boolean" column="some_parent_inactive" nullable="false">
+      <options>
+        <option name="default">0</option>
+      </options>
+    </field>
+    <field name="extra1" type="text" column="extra1" length="65535" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="extra2" type="text" column="extra2" length="65535" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="seoTitle" type="text" column="seo_title" length="65535" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="seoDescription" type="text" column="seo_description" length="65535" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="seoKeywords" type="text" column="seo_keywords" length="65535" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="idKategoriiWfmag" type="bigint" column="id_kategorii_wfmag" nullable="true">
+      <options>
+        <option name="unsigned">1</option>
+      </options>
+    </field>
+    <field name="czyWidoczna" type="boolean" column="czy_widoczna" nullable="true">
+      <options>
+        <option name="default">1</option>
+      </options>
+    </field>
+    <field name="zdjecie" type="string" column="zdjecie" length="255" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="opis" type="text" column="opis" length="65535" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+  </entity>
+</doctrine-mapping>

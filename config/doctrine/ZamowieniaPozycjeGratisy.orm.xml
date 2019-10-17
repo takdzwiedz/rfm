@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="App\Entity\ZamowieniaPozycjeGratisy" table="zamowienia_pozycje_gratisy">
+    <id name="idGratisuZamowienia" type="bigint" column="id_gratisu_zamowienia">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="idPozycjiZamowienia" type="bigint" column="id_pozycji_zamowienia" nullable="true">
+      <options>
+        <option name="unsigned">1</option>
+      </options>
+    </field>
+    <field name="idGratisu" type="bigint" column="id_gratisu" nullable="true">
+      <options>
+        <option name="unsigned">1</option>
+      </options>
+    </field>
+    <field name="iloscGratisu" type="boolean" column="ilosc_gratisu" nullable="true"/>
+  </entity>
+</doctrine-mapping>

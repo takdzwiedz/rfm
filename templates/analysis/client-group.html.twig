@@ -8,11 +8,50 @@
 {% endblock %}
 
 {% block body %}
+{#    {{ dump() }}#}
 
-    <h2>{{ title }}</h2>
+    <div style="margin: 15px">
 
-    {# Wykres kołowy #}
-    <div id="div_bar"></div>
+        <h2 class="header">{{ title }}</h2>
+
+        <div class="container">
+
+            <form class="form-group" action="{{ path('analysis_client_group') }}" method="get">
+
+                <div class="field">
+                    <label>Wartość zamówień w/we</label>
+                    <select name="group">
+                        <option value="">wszystkich grupach</option>
+                        {% for g in client_group %}
+                            {% set selected = '' %}
+                            {% if g.nazwa_grupy == group %}
+                                {% set selected = 'selected' %}
+                            {% endif %}
+                            <option value="{{ g.nazwa_grupy }}" {{ selected }}>{{ g.nazwa_grupy }}</option>
+                        {% endfor %}
+                    </select>
+                    <label>w okresie od </label>
+                    <input class="form-control" type="date" name="from" value="{{ from ? from : '' }}">
+
+                    <label>do </label>
+                    <input type="date" name="to" value="{{ to ? to : '' }}">
+
+                    <button class="button" type="submit">PRZESZUKAJ</button>
+                    <label class="sum-net" style="font-weight: bold; font-size: large"> {{ sum_net }} zł</label>
+                    <a href="{{ path('analysis_client_group', {'from': '', 'to': '', 'group': ''}) }}">Rresetuj</a>
+                </div>
+            </form>
+
+
+
+        </div>
+
+        <div class="chart">
+            <div id="div_pie2"></div>
+        </div>
+
+    </div>
+    Test przekazyania parametrów twigiem do uri
 
     {# Tabela #}
     <table id="example" class="display mdl-data-table" style="width:100%">
@@ -36,13 +75,20 @@
             </tr>
         {% endfor %}
         </tbody>
+        <tfoot>
+        <tr>
+            <th colspan="4" style="text-align:right">Total:</th>
+            <th></th>
+        </tr>
+        </tfoot>
     </table>
 {% endblock %}
 
 {% block javascripts %}
     {{ parent() }}
     <script type="text/javascript">
-        {{ gc_draw(bar_chart, 'div_bar') }}
+        {{ gc_draw([pie_chart2], ['div_pie2']) }}
     </script>
+
     <script type="text/javascript" src="{{ asset('js/client-group.js') }}"></script>
 {% endblock %}

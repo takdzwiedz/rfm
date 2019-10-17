@@ -1,0 +1,46 @@
+{% extends 'base.html.twig' %}
+
+{#{% block title %}{{ title }}{% endblock %}#}
+
+{% block stylesheets %}
+    {{ parent() }}
+{% endblock %}
+
+{% block body %}
+
+    <h2>Lista zamówień</h2>
+{{ dump() }}
+    {# Tabela #}
+    <div class="count">
+        {{ pagination.getTotalItemCount }}
+    </div>
+    <table class="display mdl-data-table" style="width:100%">
+        <thead>
+        <tr>
+            <th>{{ knp_pagination_sortable(pagination, 'Nr zamówienia', 'o.numerZamowienia') }}</th>
+
+            <th>data złożenia</th>
+            <th class="net-value">Wartość netto</th>
+            <th class="gross-value">Wartość brutto</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for order in pagination %}
+            <tr>
+                <td>{{ order.numerZamowienia }} </td>
+
+                <td>{{ order.dataZlozenia | date("d/m/Y") }} </td>
+                <td class="net-value">{{ order.wartoscNetto | number_format(2, ',') }} </td>
+                <td class="gross-value">{{ order.wartoscBrutto | number_format(2, ',') }} </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <div class="navigation">
+        {{ knp_pagination_render(pagination) }}
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+{% endblock %}

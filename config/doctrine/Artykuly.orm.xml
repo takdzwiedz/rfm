@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="App\Entity\Artykuly" table="artykuly">
+    <indexes>
+      <index name="id_ekategorii" columns="id_ekategorii"/>
+      <index name="czy_widoczny" columns="czy_widoczny"/>
+      <index name="indeks_artykulu" columns="indeks_artykulu"/>
+      <index name="id_kategorii" columns="id_kategorii"/>
+      <index name="id_artykulu_wfmag" columns="id_artykulu_wfmag"/>
+      <index name="nazwa_artykulu" columns="nazwa_artykulu"/>
+    </indexes>
+    <id name="idArtykulu" type="bigint" column="id_artykulu">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="indeksArtykulu" type="string" column="indeks_artykulu" length="20" nullable="false">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="indeksKatalogowy" type="string" column="indeks_katalogowy" length="50" nullable="false">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="nazwaArtykulu" type="string" column="nazwa_artykulu" length="255" nullable="false">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="idEkategorii" type="integer" column="id_ekategorii" nullable="false">
+      <options>
+        <option name="unsigned">1</option>
+      </options>
+    </field>
+    <field name="stawkaVat" type="boolean" column="stawka_vat" nullable="false"/>
+    <field name="jednostka" type="string" column="jednostka" length="10" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="jednostkaOryg" type="string" column="jednostka_oryg" length="10" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="jednostkaWfmag" type="string" column="jednostka_wfmag" length="10" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="stan" type="integer" column="stan" nullable="false">
+      <options>
+        <option name="unsigned">1</option>
+      </options>
+    </field>
+    <field name="czyWidoczny" type="boolean" column="czy_widoczny" nullable="true">
+      <options>
+        <option name="default">1</option>
+      </options>
+    </field>
+    <field name="czyDostepny" type="boolean" column="czy_dostepny" nullable="true">
+      <options>
+        <option name="default">1</option>
+      </options>
+    </field>
+    <field name="czyUsuniety" type="boolean" column="czy_usuniety" nullable="true"/>
+    <field name="czyGratis" type="boolean" column="czy_gratis" nullable="true"/>
+    <field name="czyNagroda" type="boolean" column="czy_nagroda" nullable="true"/>
+    <field name="idArtykuluWfmag" type="bigint" column="id_artykulu_wfmag" nullable="true">
+      <options>
+        <option name="unsigned">1</option>
+      </options>
+    </field>
+    <field name="idArtykuluProd" type="bigint" column="id_artykulu_prod" nullable="true">
+      <options>
+        <option name="unsigned">1</option>
+      </options>
+    </field>
+    <field name="idKategorii" type="integer" column="id_kategorii" nullable="false">
+      <options>
+        <option name="unsigned">1</option>
+      </options>
+    </field>
+    <field name="minimalnaIlosc" type="integer" column="minimalna_ilosc" nullable="true">
+      <options>
+        <option name="unsigned">1</option>
+      </options>
+    </field>
+    <field name="opakowanieZbiorcze" type="integer" column="opakowanie_zbiorcze" nullable="true">
+      <options>
+        <option name="unsigned">1</option>
+      </options>
+    </field>
+    <field name="czyUsluga" type="boolean" column="czy_usluga" nullable="true"/>
+    <field name="kolejnosc" type="bigint" column="kolejnosc" nullable="true">
+      <options>
+        <option name="unsigned">1</option>
+      </options>
+    </field>
+    <field name="idCenyDomyslnej" type="bigint" column="id_ceny_domyslnej" nullable="true">
+      <options>
+        <option name="unsigned">1</option>
+      </options>
+    </field>
+    <field name="idMagazynu" type="boolean" column="id_magazynu" nullable="true"/>
+    <field name="idZamiennika" type="bigint" column="id_zamiennika" nullable="false">
+      <options>
+        <option name="unsigned">1</option>
+      </options>
+    </field>
+    <field name="cenaZakupuNetto" type="float" column="cena_zakupu_netto" precision="8" scale="2" nullable="true"/>
+    <field name="kodEan" type="string" column="kod_ean" length="50" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="ostAktualizacja" type="datetime" column="ost_aktualizacja" nullable="true"/>
+    <field name="czyZaktualizowanoTemp" type="boolean" column="czy_zaktualizowano_temp" nullable="true"/>
+    <field name="cenaZakupuBrutto" type="float" column="cena_zakupu_brutto" precision="8" scale="2" nullable="true"/>
+    <field name="dataDodania" type="date" column="data_dodania" nullable="true"/>
+    <field name="wyswietlen" type="integer" column="wyswietlen" nullable="true">
+      <options>
+        <option name="unsigned">1</option>
+      </options>
+    </field>
+    <field name="stanMinimalny" type="integer" column="stan_minimalny" nullable="true">
+      <options>
+        <option name="unsigned">1</option>
+      </options>
+    </field>
+    <field name="czyZdjecie" type="boolean" column="czy_zdjecie" nullable="true"/>
+    <field name="punktyNagroda" type="integer" column="punkty_nagroda" nullable="true">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="pochodzenie" type="boolean" column="pochodzenie" nullable="true">
+      <options>
+        <option name="default">1</option>
+      </options>
+    </field>
+    <field name="indeksObcy" type="string" column="indeks_obcy" length="20" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="indeksWfmag" type="string" column="indeks_wfmag" length="20" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="podzielCeneImport" type="integer" column="podziel_cene_import" nullable="true">
+      <options>
+        <option name="unsigned">1</option>
+        <option name="default">1</option>
+      </options>
+    </field>
+    <field name="cenaImport" type="float" column="cena_import" precision="10" scale="0" nullable="true"/>
+    <field name="czyCenaWfmag" type="boolean" column="czy_cena_wfmag" nullable="true"/>
+    <field name="czyJednWfmag" type="boolean" column="czy_jedn_wfmag" nullable="true"/>
+    <field name="idKategoriiProgram" type="boolean" column="id_kategorii_program" nullable="true"/>
+    <field name="pCoreId" type="integer" column="p_core_id" nullable="true">
+      <options>
+        <option name="unsigned">1</option>
+      </options>
+    </field>
+    <field name="idArtykuluHoneti" type="integer" column="id_artykulu_honeti" nullable="true">
+      <options>
+        <option name="unsigned">1</option>
+      </options>
+    </field>
+    <field name="dataDostawy" type="string" column="data_dostawy" length="50" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="nazwaPelna" type="string" column="nazwa_pelna" length="255" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="cyklZycia" type="boolean" column="cykl_zycia" nullable="true"/>
+    <field name="idArtykuluGrupuj" type="integer" column="id_artykulu_grupuj" nullable="true">
+      <options>
+        <option name="unsigned">1</option>
+      </options>
+    </field>
+    <field name="nazwaArtykuluGrupuj" type="string" column="nazwa_artykulu_grupuj" length="255" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+  </entity>
+</doctrine-mapping>

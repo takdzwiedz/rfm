@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="App\Entity\Zamowienia" table="zamowienia">
+    <indexes>
+      <index name="id_auth" columns="id_auth"/>
+      <index name="id_auth_akceptacja" columns="id_auth_akceptacja"/>
+      <index name="id_kontrahenta" columns="id_kontrahenta"/>
+      <index name="status_ecommerce" columns="status_ecommerce"/>
+    </indexes>
+    <id name="idEzamowienia" type="bigint" column="id_ezamowienia">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="idZamowienia" type="bigint" column="id_zamowienia" nullable="false">
+      <options>
+        <option name="unsigned">1</option>
+      </options>
+    </field>
+    <field name="idKontrahenta" type="bigint" column="id_kontrahenta" nullable="false">
+      <options>
+        <option name="unsigned">1</option>
+      </options>
+    </field>
+    <field name="numerZamowienia" type="string" column="numer_zamowienia" length="15" nullable="false">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="dataZlozenia" type="date" column="data_zlozenia" nullable="false"/>
+    <field name="godzinaZlozenia" type="time" column="godzina_zlozenia" nullable="false"/>
+    <field name="dataRealizacji" type="date" column="data_realizacji" nullable="false"/>
+    <field name="priorytet" type="boolean" column="priorytet" nullable="false"/>
+    <field name="autoRezerwacja" type="boolean" column="auto_rezerwacja" nullable="false"/>
+    <field name="wartoscBrutto" type="float" column="wartosc_brutto" precision="8" scale="2" nullable="false"/>
+    <field name="wartoscNetto" type="float" column="wartosc_netto" precision="8" scale="2" nullable="false"/>
+    <field name="stan" type="string" column="stan" length="1" nullable="false">
+      <options>
+        <option name="fixed">1</option>
+      </options>
+    </field>
+    <field name="statusZamowienia" type="string" column="status_zamowienia" length="1" nullable="false">
+      <options>
+        <option name="fixed">1</option>
+      </options>
+    </field>
+    <field name="tryb" type="boolean" column="tryb" nullable="false"/>
+    <field name="narzut" type="float" column="narzut" precision="10" scale="0" nullable="false"/>
+    <field name="czyPowiadom" type="boolean" column="czy_powiadom" nullable="false">
+      <options>
+        <option name="default">1</option>
+      </options>
+    </field>
+    <field name="idAuth" type="integer" column="id_auth" nullable="false">
+      <options>
+        <option name="unsigned">1</option>
+      </options>
+    </field>
+    <field name="statusWfmag" type="boolean" column="status_wfmag" nullable="true">
+      <options>
+        <option name="default">0</option>
+      </options>
+    </field>
+    <field name="idWfmagUser" type="string" column="id_wfmag_user" length="7" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="idFirmy" type="boolean" column="id_firmy" nullable="true"/>
+    <field name="zamWartoscRabat" type="float" column="zam_wartosc_rabat" precision="6" scale="2" nullable="true"/>
+    <field name="zamZnakRabat" type="boolean" column="zam_znak_rabat" nullable="true"/>
+    <field name="statusEcommerce" type="boolean" column="status_ecommerce" nullable="true">
+      <options>
+        <option name="default">0</option>
+      </options>
+    </field>
+    <field name="rabatKontrahenta" type="float" column="rabat_kontrahenta" precision="6" scale="2" nullable="true"/>
+    <field name="idMagazynu" type="boolean" column="id_magazynu" nullable="true"/>
+    <field name="sessionId" type="string" column="session_id" length="32" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="idPlatnosci" type="integer" column="id_platnosci" nullable="true">
+      <options>
+        <option name="unsigned">1</option>
+      </options>
+    </field>
+    <field name="czyFaktura" type="boolean" column="czy_faktura" nullable="true">
+      <options>
+        <option name="default">0</option>
+      </options>
+    </field>
+    <field name="uwagi" type="text" column="uwagi" length="65535" nullable="false">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="uwagiKlienta" type="text" column="uwagi_klienta" length="65535" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="uwagiWysylka" type="text" column="uwagi_wysylka" length="65535" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="rodzajZamowienia" type="boolean" column="rodzaj_zamowienia" nullable="true"/>
+    <field name="idAuthAkceptacja" type="integer" column="id_auth_akceptacja" nullable="true">
+      <options>
+        <option name="unsigned">1</option>
+      </options>
+    </field>
+    <field name="idAdresu" type="integer" column="id_adresu" nullable="true">
+      <options>
+        <option name="unsigned">1</option>
+      </options>
+    </field>
+    <field name="idKontaktu" type="integer" column="id_kontaktu" nullable="true">
+      <options>
+        <option name="unsigned">1</option>
+      </options>
+    </field>
+    <field name="token" type="string" column="token" length="50" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="dataAkceptacji" type="datetime" column="data_akceptacji" nullable="true"/>
+    <field name="idJednostki" type="integer" column="id_jednostki" nullable="true">
+      <options>
+        <option name="unsigned">1</option>
+      </options>
+    </field>
+    <field name="idDzialu" type="integer" column="id_dzialu" nullable="true">
+      <options>
+        <option name="unsigned">1</option>
+      </options>
+    </field>
+    <field name="idDaneFaktury" type="integer" column="id_dane_faktury" nullable="true">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="numerWfmag" type="string" column="numer_wfmag" length="25" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="idZaakceptowal" type="integer" column="id_zaakceptowal" nullable="true">
+      <options>
+        <option name="unsigned">1</option>
+      </options>
+    </field>
+    <field name="idPakietu" type="integer" column="id_pakietu" nullable="true">
+      <options>
+        <option name="unsigned">1</option>
+        <option name="default">0</option>
+      </options>
+    </field>
+  </entity>
+</doctrine-mapping>

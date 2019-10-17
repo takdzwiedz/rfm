@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="App\Entity\UserAuthLogowania" table="user_auth_logowania">
+    <id name="id" type="bigint" column="id">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="idAuth" type="integer" column="id_auth" nullable="false">
+      <options>
+        <option name="unsigned">1</option>
+      </options>
+    </field>
+    <field name="idSesji" type="string" column="id_sesji" length="32" nullable="false">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="ip" type="string" column="ip" length="15" nullable="false">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="dataZalogowania" type="datetime" column="data_zalogowania" nullable="false"/>
+    <field name="dataWylogowania" type="datetime" column="data_wylogowania" nullable="false">
+      <options>
+        <option name="default">0000-00-00 00:00:00</option>
+      </options>
+    </field>
+  </entity>
+</doctrine-mapping>

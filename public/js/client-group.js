@@ -1,25 +1,36 @@
-$(document).ready(function () {
+$(document).ready(function() {
+    $('#example').DataTable( {
+        "footerCallback": function ( row, data, start, end, display ) {
+            var api = this.api(), data;
 
-    const table = $('#example').DataTable({
-        orderCellsTop: true,
-        fixedHeader: true,
-        order: [[ 2, "desc" ]]
+            // Remove the formatting to get integer data for summation
+            var intVal = function ( i ) {
+                return typeof i === 'string' ?
+                    i.replace(/[\$,]/g, '')*1 :
+                    typeof i === 'number' ?
+                        i : 0;
+            };
 
-    });
-    $('#example thead tr').clone(true).appendTo('#example thead');
-    $('#example thead tr:eq(1) th').each(function (i) {
-        var title = $(this).text();
+            // Total over all pages
+            total = api
+                .column( 3 )
+                .data()
+                .reduce( function (a, b) {
+                    return intVal(a) + intVal(b);
+                }, 0 );
 
-        $(this).html('<input type="text" placeholder="szukaj" />');
+            // Total over this page
+            pageTotal = api
+                .column( 3, { page: 'current'} )
+                .data()
+                .reduce( function (a, b) {
+                    return intVal(a) + intVal(b);
+                }, 0 );
 
-        $('input', this).on('keyup change', function () {
-            if (table.column(i).search() !== this.value) {
-                table
-                    .column(i)
-                    .search(this.value)
-                    .draw();
-            }
-        });
-    });
-
-});
+            // Update footer
+            $( api.column( 3 ).footer() ).html(
+                pageTotal +' ('+ total +' zł)'
+            );
+        }
+    } );
+} );

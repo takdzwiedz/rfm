@@ -1,11 +1,15 @@
 .contractor {
-    background: gold;
+
 }
 
 .net-value {
-    background: #a8ffa1;
+
 }
 
 .gross-value {
 
+}
+
+.chart {
+    display: inline-flex;
 }

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="App\Entity\ArtykulyWyroznienia" table="artykuly_wyroznienia">
+    <id name="idWyroznienia" type="boolean" column="id_wyroznienia">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="aktualizacjaWfmag" type="boolean" column="aktualizacja_wfmag" nullable="true">
+      <options>
+        <option name="default">0</option>
+      </options>
+    </field>
+    <field name="czyWidoczna" type="boolean" column="czy_widoczna" nullable="true">
+      <options>
+        <option name="default">0</option>
+      </options>
+    </field>
+    <field name="czyGlowna" type="boolean" column="czy_glowna" nullable="true">
+      <options>
+        <option name="default">0</option>
+      </options>
+    </field>
+    <field name="dataUtworzenia" type="date" column="data_utworzenia" nullable="true"/>
+    <field name="czyDostawy" type="boolean" column="czy_dostawy" nullable="true">
+      <options>
+        <option name="default">0</option>
+      </options>
+    </field>
+    <field name="jakoDostawy" type="boolean" column="jako_dostawy" nullable="true">
+      <options>
+        <option name="default">0</option>
+      </options>
+    </field>
+    <field name="nazwaRobocza" type="string" column="nazwa_robocza" length="255" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="czyLeweMenu" type="boolean" column="czy_lewe_menu" nullable="true">
+      <options>
+        <option name="default">1</option>
+      </options>
+    </field>
+    <field name="kolejnosc" type="boolean" column="kolejnosc" nullable="true"/>
+    <field name="kolor" type="string" column="kolor" length="7" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="kolorTla" type="string" column="kolor_tla" length="7" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+  </entity>
+</doctrine-mapping>

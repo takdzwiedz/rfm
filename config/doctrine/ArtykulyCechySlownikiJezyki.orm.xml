@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="App\Entity\ArtykulyCechySlownikiJezyki" table="artykuly_cechy_slowniki_jezyki">
+    <indexes>
+      <index name="id_pozycji_slownika" columns="id_pozycji_slownika"/>
+      <index name="id_jezyka" columns="id_jezyka"/>
+    </indexes>
+    <id name="idpcs" type="bigint" column="idpcs">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="idPozycjiSlownika" type="integer" column="id_pozycji_slownika" nullable="true">
+      <options>
+        <option name="unsigned">1</option>
+      </options>
+    </field>
+    <field name="idJezyka" type="boolean" column="id_jezyka" nullable="true"/>
+    <field name="wartoscCechy" type="string" column="wartosc_cechy" length="255" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+  </entity>
+</doctrine-mapping>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="App\Entity\ArtykulyUlubione" table="artykuly_ulubione">
+    <indexes>
+      <index name="id_auth" columns="id_auth"/>
+      <index name="id_artykulu" columns="id_artykulu"/>
+      <index name="id_kontrahenta" columns="id_kontrahenta"/>
+    </indexes>
+    <id name="id" type="integer" column="id">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="idArtykulu" type="integer" column="id_artykulu" nullable="true">
+      <options>
+        <option name="unsigned">1</option>
+      </options>
+    </field>
+    <field name="idAuth" type="integer" column="id_auth" nullable="true">
+      <options>
+        <option name="unsigned">1</option>
+      </options>
+    </field>
+    <field name="dataUtworzenia" type="date" column="data_utworzenia" nullable="true"/>
+    <field name="idKontrahenta" type="bigint" column="id_kontrahenta" nullable="true">
+      <options>
+        <option name="unsigned">1</option>
+      </options>
+    </field>
+  </entity>
+</doctrine-mapping>

@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Kontrahenci
  *
- * @ORM\Table(name="kontrahenci")
+ * @ORM\Table(name="kontrahenci", indexes={@ORM\Index(name="id_grupy", columns={"id_grupy"})})
  * @ORM\Entity
  */
 class Kontrahenci
@@ -25,6 +25,8 @@ class Kontrahenci
      * @var int
      *
      * @ORM\Column(name="id_grupy", type="integer", nullable=false, options={"unsigned"=true})
+     * @ORM\ManyToOne(targetEntity="App\Entity\KontrahenciGrupy")
+     * @ORM\JoinColumn(referencedColumnName="id_grupy")
      */
     private $idGrupy;
 

@@ -1,94 +1,170 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}{{ title }}{% endblock %}
-
 {% block stylesheets %}
-    {{ parent() }}
-    <link rel="stylesheet" type="text/css" href="{{ asset('css/client-group.css') }}">
+
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/order-product-group.css') }}">
+    <link rel="stylesheet" type="text/css"
+          href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.20/css/dataTables.bootstrap4.min.css">
+
 {% endblock %}
 
 {% block body %}
-{#    {{ dump() }}#}
+    {{ dump() }}
 
-    <div style="margin: 15px">
+    <div class="form">
 
-        <h2 class="header">{{ title }}</h2>
+        {% if group %}
 
-        <div class="container">
+        <h2 class="header">{{ title_2 }}</h2>
 
-            <form class="form-group" action="{{ path('analysis_client_group') }}" method="get">
+        {% else %}
+            <h2 class="header">{{ title_1 }}</h2>
+        {% endif %}
 
-                <div class="field">
-                    <label>Wartość zamówień w/we</label>
-                    <select name="group">
-                        <option value="">wszystkich grupach</option>
-                        {% for g in client_group %}
-                            {% set selected = '' %}
-                            {% if g.nazwa_grupy == group %}
-                                {% set selected = 'selected' %}
-                            {% endif %}
-                            <option value="{{ g.nazwa_grupy }}" {{ selected }}>{{ g.nazwa_grupy }}</option>
-                        {% endfor %}
-                    </select>
-                    <label>w okresie od </label>
-                    <input class="form-control" type="date" name="from" value="{{ from ? from : '' }}">
-
-                    <label>do </label>
-                    <input type="date" name="to" value="{{ to ? to : '' }}">
-
-                    <button class="button" type="submit">PRZESZUKAJ</button>
-                    <label class="sum-net" style="font-weight: bold; font-size: large"> {{ sum_net }} zł</label>
-                    <a href="{{ path('analysis_client_group', {'from': '', 'to': '', 'group': ''}) }}">Resetuj</a>
+        <div>
+            <form action="{{ path('analysis_client_group') }}" method="get">
+                <div class="row">
+                    <div class="col">
+                        <select class="form-control" name="group">
+                            <option value="">wszystkich grupach</option>
+                            {% for g in groups %}
+                                {% set selected = '' %}
+                                {% if g.nazwa_grupy == group %}
+                                    {% set selected = 'selected' %}
+                                {% endif %}
+                                <option value="{{ g.nazwa_grupy }}" {{ selected }}>{{ g.nazwa_grupy }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col">
+                        <input class="form-control" type="date" name="from" value="{{ from ? from : '' }}">
+                    </div>
+                    <div class="col">
+                        <input class="form-control" type="date" name="to" value="{{ to ? to : '' }}">
+                    </div>
+                    <div class="col">
+                        <button class="btn btn-success" type="submit">Przeszukaj</button>
+                        <a class="btn btn-info" role="button"
+                           href="{{ path('analysis_client_group', {'from': '', 'to': '', 'group': ''}) }}">Resetuj</a>
+                    </div>
+                    <div class="col">
+                    </div>
                 </div>
             </form>
-
-
-
         </div>
-
-        <div class="chart">
-            <div id="div_pie2"></div>
-        </div>
-
     </div>
-    Test przekazyania parametrów twigiem do uri
+    <div class="art-container">
+        {% if sum_net == 0 %}
 
-    {# Tabela #}
-    <table id="example" class="display mdl-data-table" style="width:100%">
-        <thead>
-        <tr>
-            <th>Id grupy</th>
-            <th>Nazwa grupy</th>
-            <th class="">Ilość kontrhentów w grupie</th>
-            <th class="">Wartość zakupów w grupie netto</th>
-            <th class="gross-value">Wartość zakupów w grupie brutto</th>
-        </tr>
-        </thead>
-        <tbody>
-        {% for group in client_group %}
-            <tr>
-                <td>{{ group.id_grupy }} </td>
-                <td>{{ group.nazwa_grupy }} </td>
-                <td class="contractor">{{ group.ilosc_w_grupie }} </td>
-                <td class="net-value">{{ group.wartosc_zamowien_netto }}</td>
-                <td>{{ group.wartosc_zamowien_brutto }}</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-        <tfoot>
-        <tr>
-            <th colspan="4" style="text-align:right">Total:</th>
-            <th></th>
-        </tr>
-        </tfoot>
-    </table>
+            <h3>Brak zamówień w grupie w wybranym okresie</h3>
+
+        {% else %}
+
+            {% if group %}
+
+                <div class="chart">
+                    <div id="div_column_chart"></div>
+                </div>
+
+                <table id="example" class="table table-striped table-bordered" style="width:100%">
+                    <thead>
+                    <tr>
+                        <th>Id kontrhenta</th>
+                        <th>Nazwa kontrhenta</th>
+                        <th>Nazwa grupy</th>
+                        <th>Ilość zamówień kontrahenta</th>
+                        <th>Wartość zamówień netto</th>
+
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for client in order_group %}
+                        <tr>
+                            <td>{{ client.id_kontrahenta }} </td>
+                            <td>{{ client.nazwa_kontrahenta }} </td>
+                            <td>{{ client.nazwa_grupy }} </td>
+                            <td>{{ client.ilosc_zamowien }} </td>
+                            <td>{{ client.wartosc_netto }}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                    <tfoot>
+                    <tr>
+                        <th colspan="4" style="text-align:right">Łącznie:</th>
+                        <th></th>
+                    </tr>
+                    </tfoot>
+                </table>
+
+            {% else %}
+
+                <div class="chart">
+                    <div id="div_pie2"></div>
+                </div>
+                <div class="chart">
+                    <div id="div_bar"></div>
+                </div>
+
+                <table id="example" class="table table-striped table-bordered" style="width:100%">
+                    <thead>
+                    <tr>
+                        <th>Id grupy</th>
+                        <th>Nazwa grupy</th>
+                        <th class="">Ilość zamowień w grupie</th>
+                        <th class="">Wartość zamówień w grupie netto</th>
+                        <th class="gross-value">Wartość zamówień w grupie brutto</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for group in client_group %}
+                        <tr>
+                            <td>{{ group.id_grupy }} </td>
+                            <td>{{ group.nazwa_grupy }} </td>
+                            <td class="contractor">{{ group.ilosc_zamowien_w_grupie }} </td>
+                            <td class="net-value">{{ group.wartosc_zamowien_netto }}</td>
+                            <td>{{ group.wartosc_zamowien_brutto }}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+
+                    <tfoot>
+                    <tr>
+                        <th colspan="4" style="text-align:right">Łącznie:</th>
+                        <th></th>
+                    </tr>
+                    </tfoot>
+                </table>
+
+            {% endif %}
+
+        {% endif %}
+    </div>
+
+
 {% endblock %}
 
 {% block javascripts %}
     {{ parent() }}
     <script type="text/javascript">
-        {{ gc_draw([pie_chart2], ['div_pie2']) }}
+        {% if sum_net == 0 %}
+
+        <h3>Brak zamowien w wybranym okresie </h3>
+
+        {% else %}
+
+        {% if group %}
+        {{ gc_draw([column_chart], ['div_column_chart']) }}
+        {% else %}
+        {{ gc_draw([pie_chart2, bar_chart], ['div_pie2', 'div_bar']) }}
+        {% endif %}
+        {% endif %}
     </script>
 
     <script type="text/javascript" src="{{ asset('js/client-group.js') }}"></script>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap4.min.js"></script>
+
+
 {% endblock %}

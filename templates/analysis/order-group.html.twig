@@ -1,0 +1,23 @@
+<h2 class="header">{{ title_2 }}</h2>
+
+<table id="order-group" class="display mdl-data-table" style="width:100%">
+    <thead>
+    <tr>
+        <th>Id kontrhenta</th>
+        <th>Nazwa kontrhenta</th>
+        <th>Nazwa grupy</th>
+        <th>Wartość zamówień netto</th>
+
+    </tr>
+    </thead>
+    <tbody>
+    {% for client in order_group %}
+        <tr>
+            <td>{{ client.id_kontrahenta }} </td>
+            <td>{{ client.nazwa_kontrahenta }} </td>
+            <td>{{ client.nazwa_grupy }} </td>
+            <td>{{ client.wartosc_netto }}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>

@@ -1,13 +1,5 @@
-.contractor {
-
-}
-
-.net-value {
-
-}
-
-.gross-value {
-
+.form, .chart, .art-container {
+    margin: 20px;
 }
 
 .chart {

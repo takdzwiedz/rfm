@@ -3,7 +3,12 @@
 namespace App\Controller;
 
 use App\Entity\Artykuly;
-use CMEN\GoogleChartsBundle\GoogleCharts\Charts\Material\BarChart;
+use App\QueryLogic\Client;
+use App\QueryLogic\ClientGroup;
+use App\QueryLogic\Group;
+use App\QueryLogic\OrderGroup;
+use App\QueryLogic\OrderProductGroup;
+use App\Service\ChartRender;
 use CMEN\GoogleChartsBundle\GoogleCharts\Charts\PieChart;
 use Doctrine\DBAL\Driver\Connection;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -161,23 +166,11 @@ class AnalysisController extends AbstractController
     /**
      * @Route("/client", name="analysis_client" )
      */
-    public function client()
+    public function client(Client $client)
     {
         $title = "Aktywni klienci";
 
-        $clients = $this->connection->fetchAll(
-            "
-            SELECT 
-                k.id id,
-                kg.nazwa_grupy nazwa_grupy,
-                k.nazwa_skrocona nazwa_skrocona,
-                k.nip nip,
-                k.nazwa_kontrahenta nazwa_kontrahenta
-            FROM kontrahenci k
-            LEFT JOIN kontrahenci_grupy kg on k.id_grupy = kg.id_grupy
-            WHERE czy_aktywny = 1
-            "
-        );
+        $clients = $client->getData();
 
         return $this->render('analysis/client.html.twig', [
             'clients' => $clients,
@@ -188,156 +181,156 @@ class AnalysisController extends AbstractController
     /**
      * @Route("/client_group",  name="analysis_client_group")
      */
-    public function clientGroup(Request $request)
-    {
-        $title = "Wartość zamówień netto według grup klientów";
 
+    public function clientGroup(
+        Request $request,
+        ChartRender $chartRender,
+        ClientGroup $clientGroup,
+        OrderGroup $orderGroup,
+        Group $groups
+    )
+    {
+        $titleOrderGroup1 = "Wartość zamówień netto według grup klientów";
+        $titleOrderGroup2 = "Wartość zamówień kontrahentów w grupie w wybranym okresie";
+        $group = htmlspecialchars($request->query->get("group"));
         $from = htmlspecialchars($request->query->get("from"));
         $to = htmlspecialchars($request->query->get("to"));
-        $group = htmlspecialchars($request->query->get("group"));
+        $chart = [];
+        $pieChart = [];
+        $columnChart = [];
 
-        $query = "
-                SELECT k.id_grupy,
-                       kg.nazwa_grupy,
-                       count(k.id_grupy) ilosc_w_grupie,
-                       sum(z.wartosc_netto) wartosc_zamowien_netto,
-                       sum(z.wartosc_brutto) wartosc_zamowien_brutto
-                FROM kontrahenci k
-                         LEFT JOIN kontrahenci_grupy kg on k.id_grupy = kg.id_grupy
-                         LEFT JOIN zamowienia z on k.id_kontrahenta = z.id_kontrahenta
-                WHERE czy_aktywny = 1                  
-        ";
-        $qexample = "SELECT 
-                        k.id id,
-                        nazwa_skrocona,
-                        nazwa_kontrahenta,
-                        sum(wartosc_netto)  laczna_wartosc_netto,
-                        sum(wartosc_brutto) laczna_wartosc_brutto
-                 FROM zamowienia z
-                         LEFT JOIN kontrahenci k on z.id_kontrahenta = k.id_kontrahenta
-                 WHERE czy_aktywny = 1
-                 GROUP BY z.id_kontrahenta
-                 ORDER BY laczna_wartosc_netto desc";
-        if ($group) {
-            $query .= "AND kg.nazwa_grupy = '". $group . "'";
-        }
-
-        if ($from) {
-            $query .= " AND z.data_zlozenia > CAST('" . $from . "' AS DATE)";
-        }
-
-        if ($to) {
-            $query .= " AND z.data_zlozenia < CAST('" . $to . "' AS DATE)";
-        }
-        $query .= " GROUP BY k.id_grupy ORDER BY wartosc_zamowien_netto DESC";
-
-        $clientGroup = $this->connection->fetchAll($query);
+        $allGroups = $groups->getData();
+        $clientGroup = $clientGroup->getData($group, $from, $to);
 
         // Syma wartości zamówień netto
 
         $sumNet = 0;
-
         foreach ($clientGroup as $item) {
             $sumNet += $item["wartosc_zamowien_netto"];
         }
-//        dump($sumGross);die();
-        // Zapełenie danych do PieChart
+
+        $group ? $orderGroup = $orderGroup->getData($group) : $group = [];
+
+        // Zapełenie danych do BarChart
 
         if ($clientGroup) {
-            $arr = [
+            $barChartData = [
                 ['Nazwa grupy', 'Ilość kontrahentów w grupie', 'Wartość zamówień netto'],
             ];
-
             foreach ($clientGroup as $client) {
-                $arr[] = [
+                $barChartData[] = [
                     $client['nazwa_grupy'],
-                    floatval($client['ilosc_w_grupie']),
+                    floatval($client['ilosc_zamowien_w_grupie']),
                     floatval($client['wartosc_zamowien_netto'])
                 ];
             }
-        } else {
-            die("brak danych dla podanego zakresu");
+            $chart = $chartRender->barChart(
+                $barChartData,
+                'Ilość Kontrhentów w grupie',
+                'Łączna wartość zamówień netto',
+                'Łączna wartośc zamówień netto',
+                'Ilośc kontrahentów w grupie'
+            );
+            $chart->getOptions()->setColors(['blue', 'orange', 'yellow']);
         }
 
+        // Zapełnianie danych do PieChart
         if ($clientGroup) {
-            $arr2 = [
+            $pieChartData = [
                 ['Nazwa grupy', 'Wartość zamówień netto'],
             ];
             foreach ($clientGroup as $client) {
-                $arr2[] = [
+                $pieChartData[] = [
                     $client['nazwa_grupy'],
-
                     floatval($client['wartosc_zamowien_netto'])
                 ];
             }
-        } else {
-            die("Brak danych dla podanego zakresu");
+            $pieChart = $chartRender->pieChart(
+                $pieChartData,
+                'Wartość zamówień netto w grupie');
+        }
+        // Zapełnianie danych do ColumnChart
+        if ($group) {
+            $columnChartData = [
+                ['Nazwa kontrahenta', 'Wartość zamówień netto']
+            ];
+            foreach ($orderGroup as $client) {
+                $columnChartData[] = [
+                    $client['nazwa_kontrahenta'],
+                    floatval($client['wartosc_netto'])
+                ];
+            }
+            $columnChart = $chartRender->columnChart($columnChartData, 'Wartość zamówień kontrhentów za wybrany okres');
         }
 
-        // Koniec zapełniania danych do Pie Chart
-
-        // Konfiguracja pie charts
-
-        $chart = new BarChart();
-        $chart->getData()->setArrayToDataTable($arr);
-        $chart->getOptions()->getChart()
-            ->setTitle('Ilość kontrhentów w grupie')
-            ->setSubtitle('łaczna wartość zamówień netto');
-        $chart->getOptions()
-            ->setHeight(700)
-            ->setWidth(1100)
-            ->setSeries([['axis' => 'value'], ['axis' => 'quantity']])
-            ->setAxes(['x' => [
-                'value' => ['label' => 'łaczna wartość zamówień netto'],
-                'quantity' => ['side' => 'top', 'label' => 'ilość kontrahentów w grupie']]
-            ]);
-
-        $pieChart = new PieChart();
-        $pieChart->getData()->setArrayToDataTable($arr);
-        $pieChart->getOptions()->setTitle($title);
-        $pieChart->getOptions()->setHeight(500);
-        $pieChart->getOptions()->setWidth(700);
-        $pieChart->getOptions()->getTitleTextStyle()->setBold(true);
-        $pieChart->getOptions()->getTitleTextStyle()->setColor('#009900');
-        $pieChart->getOptions()->getTitleTextStyle()->setItalic(true);
-        $pieChart->getOptions()->getTitleTextStyle()->setFontName('Arial');
-        $pieChart->getOptions()->getTitleTextStyle()->setFontSize(20);
-
-        $title2 = 'Wartośc zamówień netto w grupie';
-        $pieChart2 = new PieChart();
-        $pieChart2->getData()->setArrayToDataTable($arr2);
-        $pieChart2->getOptions()->setTitle($title2);
-        $pieChart2->getOptions()->setHeight(500);
-        $pieChart2->getOptions()->setWidth(700);
-        $pieChart2->getOptions()->getTitleTextStyle()->setBold(true);
-        $pieChart2->getOptions()->getTitleTextStyle()->setColor('#009900');
-        $pieChart2->getOptions()->getTitleTextStyle()->setItalic(true);
-        $pieChart2->getOptions()->getTitleTextStyle()->setFontName('Arial');
-        $pieChart2->getOptions()->getTitleTextStyle()->setFontSize(20);
-
-
-        // Dane do widoku twig
 
         return $this->render('analysis/client-group.html.twig', [
             'client_group' => $clientGroup,
             'bar_chart' => $chart,
-            'pie_chart' => $pieChart,
-            'pie_chart2' => $pieChart2,
-            'title' => $title,
+            'pie_chart2' => $pieChart,
+            'column_chart' => $columnChart,
+            'title_1' => $titleOrderGroup1,
+            'title_2' => $titleOrderGroup2,
             'from' => $from,
             'to' => $to,
             'group' => $group,
-            'sum_net' => $sumNet
-
+            'groups' => $allGroups,
+            'sum_net' => $sumNet,
+            'order_group' => $orderGroup
         ]);
     }
 
     /**
      * @Route("/order_product_group", name="analysis_order_product_group")
      */
-    public function order_product_group()
+    public function order_product_group(Request $request, OrderProductGroup $orderProductGroup, ChartRender $chartRender)
     {
+        $title = "Sprzedaż artykułów w kategoriach";
+        $category = htmlspecialchars($request->get("category"));
+        $from = htmlspecialchars($request->query->get("from"));
+        $to = htmlspecialchars($request->query->get("to"));
 
+        $orderGroup = $orderProductGroup->getParentData($from, $to);
+        $orderSubGroup = $orderProductGroup->getChildrenData($category, $from, $to);
+
+        $categories = [];
+
+        if ($orderGroup) {
+
+            foreach ($orderGroup as $row) {
+                if (!array_search($row["nazwa_kategorii"], $categories)) {
+                    $categories[] = $row["nazwa_kategorii"];
+                }
+            }
+        }
+
+        $barChartData = [
+            ['Nazwa kategorii', 'Ilość sprzedanych produktów', 'Suma netto sprzedanych produktów']
+        ];
+        foreach ($orderGroup as $row) {
+            $barChartData[] = [
+                $row["nazwa_kategorii"],
+                floatval($row["ilosc_sprzedanych_produktow"]),
+                floatval($row["suma_netto_sprzedanych_produktow"])
+            ];
+        }
+
+        $barChart = $chartRender->barChart($barChartData,
+            'Sprzedaż w kategoriach głównych',
+            'Ilość sprzedanych produktów',
+            'Suma sprzedaży netto produktów',
+            'Ilość sprzedanych produktów');
+        $barChart->getOptions()->setColors(['orange', 'green']);
+
+        return $this->render('analysis/order-product-group.html.twig', [
+            'title' => $title,
+            'data' => $orderGroup,
+            'categories' => $categories,
+            'category' => $category,
+            'from' => $from,
+            'to' => $to,
+            'bar_chart' => $barChart,
+            'order_sub_groups' => $orderSubGroup
+        ]);
     }
-
 }

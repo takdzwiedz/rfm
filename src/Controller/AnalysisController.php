@@ -286,6 +286,7 @@ class AnalysisController extends AbstractController
     public function order_product_group(Request $request, OrderProductGroup $orderProductGroup, ChartRender $chartRender)
     {
         $title = "Sprzedaż artykułów w kategoriach";
+        $title2 = "Sprzedaż artykułów w podkategoriach";
         $category = htmlspecialchars($request->get("category"));
         $from = htmlspecialchars($request->query->get("from"));
         $to = htmlspecialchars($request->query->get("to"));
@@ -322,14 +323,32 @@ class AnalysisController extends AbstractController
             'Ilość sprzedanych produktów');
         $barChart->getOptions()->setColors(['orange', 'green']);
 
+        // Zapełnianie danych do ColumnChart
+        $columnChart = [];
+        if ($category) {
+            $columnChartData = [
+                ['Nazwa podkategorii', 'Suma netto sprzedanych produktów']
+            ];
+            foreach ($orderSubGroup as $client) {
+                $columnChartData[] = [
+                    $client['nazwa_kategorii'],
+                    floatval($client['suma_netto_sprzedanych_produktow'])
+                ];
+            }
+            $columnChart = $chartRender->columnChart($columnChartData, 'Wartość zamówień kontrhentów za wybrany okres');
+            $columnChart->getOptions()->setColors('purple');
+        }
+
         return $this->render('analysis/order-product-group.html.twig', [
             'title' => $title,
+            'title_2' => $title2,
             'data' => $orderGroup,
             'categories' => $categories,
             'category' => $category,
             'from' => $from,
             'to' => $to,
             'bar_chart' => $barChart,
+            'column_chart' => $columnChart,
             'order_sub_groups' => $orderSubGroup
         ]);
     }

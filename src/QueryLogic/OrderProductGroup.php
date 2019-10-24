@@ -87,9 +87,16 @@ class OrderProductGroup
             GROUP BY e.id_kategorii
             ORDER BY suma_netto_sprzedanych_produktow DESC;
         ";
-//        dump($query);die();
+
         return $orderSubGroup = $this->connection->fetchAll($query);
     }
 
+    /**
+     * @return Connection
+     */
+    public function getGrandChildrenData()
+    {
+        
+    }
 
 }

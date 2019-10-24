@@ -10,13 +10,11 @@
 {% endblock %}
 
 {% block body %}
-    {{ dump() }}
+    {#    {{ dump() }}#}
 
     <div class="form">
-
         {% if group %}
-
-        <h2 class="header">{{ title_2 }}</h2>
+            <h2 class="header">{{ title_2 }}</h2>
 
         {% else %}
             <h2 class="header">{{ title_1 }}</h2>
@@ -48,8 +46,7 @@
                         <a class="btn btn-info" role="button"
                            href="{{ path('analysis_client_group', {'from': '', 'to': '', 'group': ''}) }}">Resetuj</a>
                     </div>
-                    <div class="col">
-                    </div>
+
                 </div>
             </form>
         </div>
@@ -149,7 +146,12 @@
     <script type="text/javascript">
         {% if sum_net == 0 %}
 
-        <h3>Brak zamowien w wybranym okresie </h3>
+        <
+        h3 > Brak
+        zamowien
+        w
+        wybranym
+        okresie < /h3>
 
         {% else %}
 

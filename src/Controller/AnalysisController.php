@@ -32,9 +32,11 @@ class AnalysisController extends AbstractController
     /**
      * @Route("/")
      */
-    public function homepage()
+    public function index()
     {
-        return new Response('Tu powstanie moduł analiz');
+        return $this->render("analysis/index.html.twig", [
+
+        ]);
     }
 
     /**
@@ -190,6 +192,7 @@ class AnalysisController extends AbstractController
         Group $groups
     )
     {
+
         $titleOrderGroup1 = "Wartość zamówień netto według grup klientów";
         $titleOrderGroup2 = "Wartość zamówień kontrahentów w grupie w wybranym okresie";
         $group = htmlspecialchars($request->query->get("group"));
@@ -263,8 +266,7 @@ class AnalysisController extends AbstractController
             $columnChart = $chartRender->columnChart($columnChartData, 'Wartość zamówień kontrhentów za wybrany okres');
         }
 
-
-        return $this->render('analysis/client-group.html.twig', [
+        $data = [
             'client_group' => $clientGroup,
             'bar_chart' => $chart,
             'pie_chart2' => $pieChart,
@@ -277,7 +279,10 @@ class AnalysisController extends AbstractController
             'groups' => $allGroups,
             'sum_net' => $sumNet,
             'order_group' => $orderGroup
-        ]);
+        ];
+        dump($data);
+
+        return $this->render('analysis/client-group.html.twig', $data);
     }
 
     /**

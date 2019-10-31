@@ -2,16 +2,19 @@
 
 {% block stylesheets %}
 
-    {#    {{ parent() }}#}
-
-    <link rel="stylesheet" type="text/css" href="{{ asset('css/order-product-group.css') }}">
+     <link rel="stylesheet" type="text/css" href="{{ asset('css/order-product-group.css') }}">
     <link rel="stylesheet" type="text/css"
           href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/css/bootstrap.css">
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.20/css/dataTables.bootstrap4.min.css">
+
 {% endblock %}
+
+
 
 {% block body %}
     {#    {{ dump() }}#}
+
+    {% include 'nav-bar.html.twig' %}
 
     <div class="form">
         {% if category %}

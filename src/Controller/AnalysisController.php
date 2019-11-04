@@ -30,7 +30,7 @@ class AnalysisController extends AbstractController
     }
 
     /**
-     * @Route("/")
+     * @Route("/", name = "analysis_index")
      */
     public function index()
     {

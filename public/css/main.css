@@ -1,8 +1,8 @@
 /*
     DEMO STYLE
 */
-
 @import "https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700";
+
 body {
     font-family: 'Poppins', sans-serif;
     background: #fafafa;
@@ -97,10 +97,10 @@ a:focus {
     background: #fff;
 }
 
-#sidebar ul li.active>a,
+#sidebar ul li.active > a,
 a[aria-expanded="true"] {
     color: #fff;
-    background: #C76320;
+    background: #E96F18;
 }
 
 a[data-toggle="collapse"] {
@@ -118,19 +118,19 @@ a[data-toggle="collapse"] {
 ul ul a {
     font-size: 0.9em !important;
     padding-left: 30px !important;
-    background: #C76320;
+    background: #E96F18;
 }
 
 ul ul ul a {
     font-size: 0.9em !important;
     padding-left: 40px !important;
-    background: #C76320;
+    background: #E96F18;
 }
 
 ul ul ul ul a {
     font-size: 0.9em !important;
     padding-left: 50px !important;
-    background: #C76320;
+    background: #E96F18;
 }
 
 ul.CTAs {
@@ -182,15 +182,19 @@ a.article:hover {
     #sidebar {
         margin-left: -250px;
     }
+
     #sidebar.active {
         margin-left: 0;
     }
+
     #content {
         width: 100%;
     }
+
     #content.active {
         width: calc(100% - 250px);
     }
+
     #sidebarCollapse span {
         display: none;
     }
@@ -202,5 +206,18 @@ a.article:hover {
 
 .btn-menu {
     background-color: #18114A;
-    color: #ffffff ;
+    color: #ffffff;
+}
+
+.a-name {
+    display: inline-block !important;
+    width: 70%
+}
+
+.a-arrow {
+    display: inline-block !important;
+    width: 15%;
+    height: 100%;
+    position: relative;
+    float: right;
 }

@@ -1,22 +1,21 @@
 $(document).ready(function () {
-    // Setup - add a text input to each footer cell
-    $('#example thead tr').clone(true).appendTo('#example thead');
-    $('#example thead tr:eq(1) th').each(function (i) {
-        var title = $(this).text();
-        $(this).html('<input type="text" placeholder="Search ' + title + '" />');
+    var t = $('#example').DataTable({
+        "columnDefs": [{
+            "searchable": true,
+            "orderable": true,
+            "targets": 4,
 
-        $('input', this).on('keyup change', function () {
-            if (table.column(i).search() !== this.value) {
-                table
-                    .column(i)
-                    .search(this.value)
-                    .draw();
-            }
+        }],
+        "order": [[4, 'desc']],
+        "language": {
+            "url": "//cdn.datatables.net/plug-ins/1.10.20/i18n/Polish.json"
+        },
+    });
+
+    t.on('order.dt search.dt', function () {
+        t.column(0, {search: 'applied', order: 'applied'}).nodes().each(function (cell, i) {
+            cell.innerHTML = i + 1;
         });
-    });
+    }).draw();
 
-    var table = $('#example').DataTable({
-        orderCellsTop: true,
-        fixedHeader: true
-    });
 });

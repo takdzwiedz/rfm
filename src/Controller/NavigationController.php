@@ -7,7 +7,6 @@ namespace App\Controller;
 use App\QueryLogic\Group;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 class NavigationController extends AbstractController
@@ -20,7 +19,8 @@ class NavigationController extends AbstractController
 
         $groups = $group->getData();
 
-        return $this->render('nav-bar.html.twig', [
+
+        return $this->render('base.html.twig', [
             'nav' => $groups
         ]);
     }

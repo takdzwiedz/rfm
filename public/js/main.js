@@ -17,7 +17,7 @@ $(document).ready(function () {
 function getAllClientGroups() {
 
     $.ajax({
-        url: 'groups2',
+        url: 'group',
         method: 'post',
         success: function (res) {
             Object.keys(res).forEach(key => {

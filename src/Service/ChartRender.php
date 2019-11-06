@@ -34,8 +34,8 @@ class ChartRender
             ->setTitle($title)
             ->setSubtitle($subtitle);
         $barChart->getOptions()
-            ->setHeight(700)
-            ->setWidth(1100)
+            ->setHeight(500)
+            ->setWidth(800)
             ->setSeries([['axis' => 'value'], ['axis' => 'quantity']])
             ->setAxes(['x' => [
                 'value' => ['label' => $xValueLabel],

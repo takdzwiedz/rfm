@@ -77,10 +77,8 @@ class GroupOrder
         if ($to) {
             $query .= " AND z.data_zlozenia <= CAST('" . $to . "' AS DATE)";
         }
-        dump($query);
         $query .= " GROUP BY id_kontrahenta";
-//dump();
+
         return  $this->connection->fetchAll($query);
     }
-
 }

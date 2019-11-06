@@ -22,6 +22,7 @@ class GroupController extends AbstractController
     {
         $data = $group->getData();
 
+//        dump($data);die();
         return new JsonResponse($data);
     }
 
@@ -86,29 +87,33 @@ class GroupController extends AbstractController
 
     /**
      * @Route("/group-order/{id_group}",  name="analysis_group_order")
+     * @param null $id_group
+     * @param Request $request
+     * @param ChartRender $chartRender
+     * @param ClientGroup $clientGroup
+     * @param GroupOrder $groupOrder
+     * @return Response
      */
 
     public function GroupOrder(
-        $id_group = null,
-        Request $request,
-        ChartRender $chartRender,
-        ClientGroup $clientGroup,
-        GroupOrder $groupOrder,
-        OrderGroup $orderGroup,
-        Group $groups
+        $id_group, Request $request, ChartRender $chartRender, ClientGroup $clientGroup, GroupOrder $groupOrder, Group $group
     )
     {
-        $titleOrderGroup = "Wartość zamówień kontrahentów w grupie";
-        $group = htmlspecialchars($request->query->get("group"));
+        $titleOrderGroup = "Zamówienia kontrahentów";
         $from = htmlspecialchars($request->query->get("from"));
         $to = htmlspecialchars($request->query->get("to"));
+        $groupName = '';
         $chart = [];
         $pieChart = [];
         $columnChart = [];
 
-
-
         $orderGroup = $groupOrder->getGroup($id_group, $from, $to);
+
+        $group = $group->getData($id_group);
+
+        if ($group) {
+            $groupName = $group[0]['nazwa_grupy'];
+        }
 
 
         // Zapełnianie danych do ColumnChart
@@ -133,9 +138,9 @@ class GroupController extends AbstractController
             'title' => $titleOrderGroup,
             'from' => $from,
             'to' => $to,
-//            'group' => $group,
             'id_group' => $id_group,
-//            'groups' => $allGroups,
+            'group' => $group,
+            'group_name' => $groupName,
             'order_group' => $orderGroup
         ];
         dump($data);

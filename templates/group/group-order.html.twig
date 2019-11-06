@@ -8,8 +8,10 @@
 
 {% block body %}
 
+    {% if group %}
+
     <div class="form">
-        <h2 class="header">{{ title }}</h2>
+        <h2 class="header">{{ title }} w {{ group_name }}</h2>
         <div>
             <form action="{{ path('analysis_client_group') }}" method="get">
                 <div class="row">
@@ -65,6 +67,11 @@
             </table>
         {% endif %}
     </div>
+
+    {%  else %}
+        <h2>Brak grupy o podanym id</h2>
+    {% endif %}
+
 
 {% endblock %}
 

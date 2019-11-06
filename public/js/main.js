@@ -16,14 +16,15 @@ $(document).ready(function () {
 
 function getAllClientGroups() {
 
+    var url = window.location.origin;
     $.ajax({
-        url: 'group',
+        url: window.location.href.split('/')[0] + '/group',
         method: 'post',
         success: function (res) {
             Object.keys(res).forEach(key => {
-                $("#art").append("<a class=\"a-name\" href=\"#\" data-toggle=\"collapse\" id=\"" + res[key]['id'] + " \" >" + res[key]['nazwa_grupy'] + "</a>\n" +
+                $("#art").append("<a href=\"" + url + "/group-order/" + res[key]['id_grupy'] + "\" id=\"" + res[key]['id_grupy'] + " \" class=\"a-name\" >" + res[key]['nazwa_grupy'] + "</a>\n" +
                     "                        <a href=\"#homeSubmenu" + key + "\" data-toggle=\"collapse\" aria-expanded=\"false\"\n" +
-                    "                           class=\"a-arrow dropdown-toggle\" id=\"" + res[key]['id'] + "\" onclick=\"getAllClient(" + res[key]['id'] + ")\"></a>\n" +
+                    "                           class=\"a-arrow dropdown-toggle\" id=\"" + res[key]['id_grupy'] + "\" onclick=\"getAllClient(" + res[key]['id_grupy'] + ")\"></a>\n" +
                     "\n" +
                     "                        <ul class=\"collapse list-unstyled\" id=\"homeSubmenu" + key + "\">\n" +
                     "                            <li class=\"\">\n" +

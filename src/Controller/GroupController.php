@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\QueryLogic\ClientGroup;
 use App\QueryLogic\Group;
+use App\QueryLogic\GroupOrder;
 use App\QueryLogic\OrderGroup;
 use App\Service\ChartRender;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -25,23 +26,22 @@ class GroupController extends AbstractController
     }
 
     /**
-     * @Route("/group-order", name="analysis_group_order_all")
+     * @Route("/group-order-all", name="analysis_group_order_all")
      * @param Request $request
      * @param ChartRender $chartRender
-     * @param ClientGroup $clientGroup
+     * @param GroupOrder $groupOrder
      * @param OrderGroup $orderGroup
-     * @param Group $groups
      * @return Response
      */
-    public function groupOrder(Request $request, ChartRender $chartRender, ClientGroup $clientGroup, OrderGroup $orderGroup
+    public function groupOrderAll(Request $request, ChartRender $chartRender, GroupOrder $groupOrder, OrderGroup $orderGroup
     )
     {
-        $titleOrderGroup = "Wartość zamówień kontrahentów w grupie w wybranym okresie";
+        $titleOrderGroup = "Wartość zamówień kontrahentów w grupach w wybranym okresie";
         $from = htmlspecialchars($request->query->get("from"));
         $to = htmlspecialchars($request->query->get("to"));
         $chart = [];
 
-        $clientGroup = $clientGroup->getData($from, $to);
+        $clientGroup = $groupOrder->getAll(null, $from, $to);
 
         // Suma wartości zamówień netto
 
@@ -81,10 +81,65 @@ class GroupController extends AbstractController
             'sum_net' => $sumNet,
             'order_group' => $orderGroup
         ];
+        return $this->render('group/group-order-all.html.twig', $data);
+    }
+
+    /**
+     * @Route("/group-order/{id_group}",  name="analysis_group_order")
+     */
+
+    public function GroupOrder(
+        $id_group = null,
+        Request $request,
+        ChartRender $chartRender,
+        ClientGroup $clientGroup,
+        GroupOrder $groupOrder,
+        OrderGroup $orderGroup,
+        Group $groups
+    )
+    {
+        $titleOrderGroup = "Wartość zamówień kontrahentów w grupie";
+        $group = htmlspecialchars($request->query->get("group"));
+        $from = htmlspecialchars($request->query->get("from"));
+        $to = htmlspecialchars($request->query->get("to"));
+        $chart = [];
+        $pieChart = [];
+        $columnChart = [];
+
+
+
+        $orderGroup = $groupOrder->getGroup($id_group, $from, $to);
+
+
+        // Zapełnianie danych do ColumnChart
+        if ($id_group) {
+            $columnChartData = [
+                ['Nazwa kontrahenta', 'Wartość zamówień netto']
+            ];
+            foreach ($orderGroup as $client) {
+                $columnChartData[] = [
+                    $client['nazwa_kontrahenta'],
+                    floatval($client['wartosc_netto'])
+                ];
+            }
+            $columnChart = $chartRender->columnChart($columnChartData, 'Wartość zamówień kontrhentów za wybrany okres');
+        }
+
+        $data = [
+            'client_group' => $clientGroup,
+            'bar_chart' => $chart,
+            'pie_chart2' => $pieChart,
+            'column_chart' => $columnChart,
+            'title' => $titleOrderGroup,
+            'from' => $from,
+            'to' => $to,
+//            'group' => $group,
+            'id_group' => $id_group,
+//            'groups' => $allGroups,
+            'order_group' => $orderGroup
+        ];
         dump($data);
 
         return $this->render('group/group-order.html.twig', $data);
     }
-
-
 }

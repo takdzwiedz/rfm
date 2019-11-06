@@ -55,5 +55,4 @@ $(document).ready(function () {
             cell.innerHTML = i + 1;
         });
     }).draw();
-
 });

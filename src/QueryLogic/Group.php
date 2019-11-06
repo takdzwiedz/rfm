@@ -22,7 +22,7 @@ class Group
         $this->connection = $connection;
     }
 
-    public function getData()
+    public function getData($id_group = null)
     {
         $query =
             "
@@ -30,6 +30,10 @@ class Group
                    id, id_grupy, nazwa_grupy, opis_grupy, narzut, id_ceny
             FROM kontrahenci_grupy
         ";
+
+        if($id_group) {
+            $query .= " WHERE id_grupy = '" . $id_group . "'";
+        }
 
         return $this->connection->fetchAll($query);
     }

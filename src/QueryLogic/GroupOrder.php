@@ -3,7 +3,15 @@
 
 namespace App\QueryLogic;
 
+
 use Doctrine\DBAL\Connection;
+
+/**
+ * Class ClientGroup
+ * @package App\QueryLogic
+ *
+ * Zamówienia w grupach
+ */
 
 class GroupOrder
 {
@@ -17,7 +25,7 @@ class GroupOrder
         $this->connection = $connection;
     }
 
-    public function getData($group = null, $from = null, $to= null)
+    public function getAll($id_group = null, $from = null, $to= null)
     {
         $query = "
                 SELECT k.id_grupy,
@@ -30,8 +38,8 @@ class GroupOrder
                          LEFT JOIN zamowienia z on k.id_kontrahenta = z.id_kontrahenta
                 WHERE z.id_kontrahenta > 0
         ";
-        if ($group) {
-            $query .= "AND kg.nazwa_grupy = '" . $group . "'";
+        if ($id_group) {
+            $query .= "AND kg.id_grupy = '" . $id_group . "'";
         }
         if ($from) {
             $query .= " AND z.data_zlozenia >= CAST('" . $from . "' AS DATE)";
@@ -43,4 +51,36 @@ class GroupOrder
 
         return $clientGroup = $this->connection->fetchAll($query);
     }
+
+    public function getGroup($id_group = null, $from = null, $to= null)
+    {
+        $query = "
+            SELECT
+                z.id_kontrahenta id_kontrahenta,
+                k.nazwa_kontrahenta nazwa_kontrahenta,
+                kg.nazwa_grupy nazwa_grupy,
+                COUNT(z.id_kontrahenta) ilosc_zamowien,
+                SUM(z.wartosc_netto) wartosc_netto
+            FROM zamowienia z
+            LEFT JOIN kontrahenci k on z.id_kontrahenta = k.id_kontrahenta
+            LEFT JOIN kontrahenci_grupy kg on k.id_grupy = kg.id_grupy
+            WHERE k.id_kontrahenta > 0
+
+        ";
+        if ($id_group) {
+            $query .= "AND kg.id_grupy = '" . $id_group . "'";
+        }
+
+        if ($from) {
+            $query .= " AND z.data_zlozenia >= CAST('" . $from . "' AS DATE)";
+        }
+        if ($to) {
+            $query .= " AND z.data_zlozenia <= CAST('" . $to . "' AS DATE)";
+        }
+        dump($query);
+        $query .= " GROUP BY id_kontrahenta";
+//dump();
+        return  $this->connection->fetchAll($query);
+    }
+
 }

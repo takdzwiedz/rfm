@@ -104,7 +104,7 @@
                 <table id="example" class="table table-striped table-bordered" style="width:100%">
                     <thead>
                     <tr>
-                        <th>Id grupy</th>
+                        <th>Lp</th>
                         <th>Nazwa grupy</th>
                         <th class="">Ilość zamowień w grupie</th>
                         <th class="">Wartość zamówień w grupie netto</th>
@@ -114,7 +114,7 @@
                     <tbody>
                     {% for group in client_group %}
                         <tr>
-                            <td>{{ group.id_grupy }} </td>
+                            <td></td>
                             <td>{{ group.nazwa_grupy }} </td>
                             <td class="contractor">{{ group.ilosc_zamowien_w_grupie }} </td>
                             <td class="net-value">{{ group.wartosc_zamowien_netto }}</td>

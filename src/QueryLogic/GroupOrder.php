@@ -52,7 +52,7 @@ class GroupOrder
         return $clientGroup = $this->connection->fetchAll($query);
     }
 
-    public function getGroup($id_group = null, $from = null, $to= null)
+    public function getGroup($id_group = null, $from = null, $to= null, $id_client = null)
     {
         $query = "
             SELECT
@@ -60,7 +60,8 @@ class GroupOrder
                 k.nazwa_kontrahenta nazwa_kontrahenta,
                 kg.nazwa_grupy nazwa_grupy,
                 COUNT(z.id_kontrahenta) ilosc_zamowien,
-                SUM(z.wartosc_netto) wartosc_netto
+                SUM(z.wartosc_netto) wartosc_netto,
+                SUM(z.wartosc_brutto) wartosc_brutto
             FROM zamowienia z
             LEFT JOIN kontrahenci k on z.id_kontrahenta = k.id_kontrahenta
             LEFT JOIN kontrahenci_grupy kg on k.id_grupy = kg.id_grupy
@@ -70,7 +71,9 @@ class GroupOrder
         if ($id_group) {
             $query .= "AND kg.id_grupy = '" . $id_group . "'";
         }
-
+        if ($id_client) {
+            $query .= "AND k.id_kontrahenta = '" . $id_client . "'";
+        }
         if ($from) {
             $query .= " AND z.data_zlozenia >= CAST('" . $from . "' AS DATE)";
         }
@@ -78,7 +81,7 @@ class GroupOrder
             $query .= " AND z.data_zlozenia <= CAST('" . $to . "' AS DATE)";
         }
         $query .= " GROUP BY id_kontrahenta";
-
+//dump($query);
         return  $this->connection->fetchAll($query);
     }
 }

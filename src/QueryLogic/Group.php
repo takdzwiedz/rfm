@@ -34,7 +34,7 @@ class Group
         if($id_group) {
             $query .= " WHERE id_grupy = '" . $id_group . "'";
         }
-dump($query);
+        dump($query);
         return $this->connection->fetchAll($query);
     }
 }

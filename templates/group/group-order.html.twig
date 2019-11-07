@@ -51,7 +51,7 @@
                 {% for client in order_group %}
                     <tr>
                         <td>{{ client.id_kontrahenta }} </td>
-                        <td>{{ client.nazwa_kontrahenta }} </td>
+                        <td><a href="{{ path('analysis_client_order', {'id_client': client.id_kontrahenta }) }}">{{ client.nazwa_kontrahenta }}</a></td>
                         <td>{{ client.nazwa_grupy }} </td>
                         <td>{{ client.ilosc_zamowien }} </td>
                         <td>{{ client.wartosc_netto }}</td>

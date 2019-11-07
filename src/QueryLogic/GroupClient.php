@@ -38,13 +38,10 @@ class GroupClient
             WHERE k.id > 0
         ";
 
-
-
         if($id_grupy) {
             $query .= "
                 AND k.id_grupy = '" . $id_grupy. "'";
         }
-        dump($query);die();
 
         return $this->connection->fetchAll($query);
     }

@@ -32,8 +32,11 @@ class ClientController extends AbstractController
      * @param GroupOrder $groupOrder
      * @return Response
      */
-    public function clientOrder($id_client, ClientOrder $clientOrder, GroupOrder $groupOrder)
+    public function clientOrder($id_client, ClientOrder $clientOrder, GroupOrder $groupOrder, Request $request)
     {
+
+        $from = htmlspecialchars($request->query->get("from"));
+        $to = htmlspecialchars($request->query->get("to"));
         if ($clientOrder->getData($id_client)) {
 
             $client = $clientOrder->getData($id_client)[0];
@@ -58,6 +61,8 @@ class ClientController extends AbstractController
             'group_name' => $groupName,
             'client_order' => $clientOrder,
             'group_order' => $groupOrder,
+            'from' => $from,
+            'to' => $to,
         ];
         dump($data);
         return $this->render("client/client-order.html.twig", $data);

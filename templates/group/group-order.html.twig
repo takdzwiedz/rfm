@@ -11,9 +11,9 @@
     {% if group %}
 
     <div class="form">
-        <h2 class="header">{{ title }} w {{ group_name }}</h2>
+        <h3 class="header">{{ title }} w grupie {{ group_name }}</h3>
         <div>
-            <form action="{{ path('analysis_client_group') }}" method="get">
+            <form action="{{ path('analysis_group_order', {'id_group' : id_group}) }}" method="get">
                 <div class="row">
                     <div class="col">
                         <input class="form-control" type="date" name="from" value="{{ from ? from : '' }}">
@@ -24,7 +24,7 @@
                     <div class="col">
                         <button class="btn btn-success" type="submit">Przeszukaj</button>
                         <a class="btn btn-info" role="button"
-                           href="{{ path('analysis_client_group', {'from': '', 'to': '', 'group': ''}) }}">Resetuj</a>
+                           href="{{ path('analysis_group_order', {'from': '', 'to': '', 'id_group': id_group}) }}">Resetuj</a>
                     </div>
                 </div>
             </form>
@@ -32,7 +32,7 @@
     </div>
     <div class="art-container">
         {% if order_group is empty %}
-            <h3>Brak zamówień w grupie w wybranym okresie</h3>
+            <h4>Brak zamówień w grupie w wybranym okresie</h4>
         {% else %}
             <div class="chart">
                 <div id="div_column_chart"></div>
@@ -42,9 +42,9 @@
                 <tr>
                     <th>Id kontrhenta</th>
                     <th>Nazwa kontrhenta</th>
-                    <th>Nazwa grupy</th>
                     <th>Ilość zamówień kontrahenta</th>
                     <th>Wartość zamówień netto</th>
+                    <th>Wartość zamówień brutto</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -52,9 +52,9 @@
                     <tr>
                         <td>{{ client.id_kontrahenta }} </td>
                         <td><a href="{{ path('analysis_client_order', {'id_client': client.id_kontrahenta }) }}">{{ client.nazwa_kontrahenta }}</a></td>
-                        <td>{{ client.nazwa_grupy }} </td>
                         <td>{{ client.ilosc_zamowien }} </td>
                         <td>{{ client.wartosc_netto }}</td>
+                        <td>{{ client.wartosc_brutto }}</td>
                     </tr>
                 {% endfor %}
                 </tbody>
@@ -69,7 +69,7 @@
     </div>
 
     {%  else %}
-        <h2>Brak grupy o podanym id</h2>
+        <h4>Brak grupy o podanym id</h4>
     {% endif %}
 
 
@@ -84,6 +84,6 @@
     <script type="text/javascript" src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap4.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.concat.min.js"></script>
-    <script type="text/javascript" src="{{ asset('js/client-group.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/group-order.js') }}"></script>
 
 {% endblock %}

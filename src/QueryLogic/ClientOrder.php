@@ -22,7 +22,7 @@ class ClientOrder
     {
         $query = "
             SELECT ua.id_auth id_user,
-                   ua.imie_nazwisko name_surname,
+                   ua.imie_nazwisko username_name,
                    k.id_kontrahenta id_client,
                    k.nazwa_kontrahenta client_name,
                    kg.id_grupy id_group,

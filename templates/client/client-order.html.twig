@@ -4,7 +4,7 @@
 
 {% block stylesheets %}
     {{ parent() }}
-{#    <link rel="stylesheet" type="text/css" href="{{ asset('css/order-product-group.css') }}">#}
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/order-product-group.css') }}">
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.20/css/dataTables.bootstrap4.min.css">
 {% endblock %}
 
@@ -12,9 +12,70 @@
 
     {% if client_name %}
 
+        <div class="form">
+            <h3 class="header">{{ title }} {{ client_name }} w grupie <a href="{{ path('analysis_group_order', {'id_group': id_group }) }}">{{ group_name }}</a></h3>
+            <div>
+                <form action="{{ path('analysis_client_order', {'id_client': group_order[0]["id_kontrahenta"]}) }}" method="get">
+                    <div class="row">
+                        <div class="col">
+                            <input class="form-control" type="date" name="from" value="{{ from ? from : '' }}">
+                        </div>
+                        <div class="col">
+                            <input class="form-control" type="date" name="to" value="{{ to ? to : '' }}">
+                        </div>
+                        <div class="col">
+                            <button class="btn btn-success" type="submit">Przeszukaj</button>
+                            <a class="btn btn-info" role="button"
+                               href="{{ path('analysis_client_order', {'from': '', 'to': '', 'id_client': group_order[0]["id_kontrahenta"]}) }}">Resetuj</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="art-container">
+            {% if client_order is empty %}
+                <h4>Brak zamówień kontrahenta w wybranym okresie</h4>
+            {% else %}
+                <div class="chart">
+{#                    <div id="div_column_chart"></div>#}
+                </div>
+                <table id="example" class="table table-striped table-bordered" style="width:100%">
+                    <thead>
+                    <tr>
+                        <th>Lp.</th>
+                        <th>Id uzytkownika</th>
+                        <th>Nazwa użytkownika</th>
+                        <th>Ilość zamówień</th>
+                        <th>Wartość zamówień netto</th>
+                        <th>Wartość zamówień brutto</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for user in client_order %}
+                        <tr>
+                            <td></td>
+                            <td>{{ user.id_user }}</td>
+                            <td>{{ user.username_name }} </td>
+                            <td>{{ user.order_quantity }} </td>
+                            <td>{{ user.net_sum }}</td>
+                            <td>{{ user.gross_sum }}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                    <tfoot>
+                    <tr>
+                        <th colspan="5" style="text-align:right">Łącznie:</th>
+                        <th></th>
+                    </tr>
+                    </tfoot>
+                </table>
+            {% endif %}
+        </div>
+
+
 
     {%  else %}
-        <h2>Brak kontrahenta o podanym id</h2>
+        <h4>Brak kontrahenta o podanym id</h4>
     {% endif %}
 
 {% endblock %}
@@ -28,6 +89,6 @@
     <script type="text/javascript" src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap4.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.concat.min.js"></script>
-{#    <script type="text/javascript" src="{{ asset('js/client-group.js') }}"></script>#}
+    <script type="text/javascript" src="{{ asset('js/client-order.js') }}"></script>
 
 {% endblock %}

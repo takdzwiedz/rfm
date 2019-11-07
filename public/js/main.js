@@ -22,12 +22,12 @@ function getAllClientGroups() {
         method: 'post',
         success: function (res) {
             Object.keys(res).forEach(key => {
-                $("#art").append("<a href=\"" + url + "/group-order/" + res[key]['id_grupy'] + "\" id=\"" + res[key]['id_grupy'] + " \" class=\"a-name\" >" + res[key]['nazwa_grupy'] + "</a>\n" +
+                $("#group").append("<a href=\"" + url + "/group-order/" + res[key]['id_grupy'] + "\" id=\"" + res[key]['id_grupy'] + " \" class=\"a-name\" >" + res[key]['nazwa_grupy'] + "</a>\n" +
                     "                        <a href=\"#homeSubmenu" + key + "\" data-toggle=\"collapse\" aria-expanded=\"false\"\n" +
                     "                           class=\"a-arrow dropdown-toggle\" id=\"" + res[key]['id_grupy'] + "\" onclick=\"getAllClient(" + res[key]['id_grupy'] + ")\"></a>\n" +
                     "\n" +
                     "                        <ul class=\"collapse list-unstyled\" id=\"homeSubmenu" + key + "\">\n" +
-                    "                            <li class=\"\">\n" +
+                    "                            <li id=\"client" + res[key]['id_grupy'] + "\">\n" +
                     "                                <a href=\"#\" class=\"a-name\">Kontrahent 1</a>\n" +
                     "                                <a href=\"#homeSubmenu3" + key + "\" data-toggle=\"collapse\" aria-expanded=\"false\"\n" +
                     "                                   class=\"a-arrow dropdown-toggle\"></a>\n" +
@@ -70,7 +70,23 @@ function getAllClientGroups() {
         },
     })
 }
-
-function getAllClient() {
-
-}
+//
+// function getAllClient(id_group) {
+//     var url = window.location.origin;
+//     $.ajax({
+//         url: window.location.href.split('/')[0] + '/group-client/' + id_group,
+//         method: 'post',
+//         success: function (res) {
+//             Object.keys(res).forEach(key => {
+//                 let id = '#client' + id_group;
+//                 console.log(id);
+//                 document.getElementById(id).append("<a href=\"dupa\" </a>")
+//                 $("#client1")
+//
+//             });
+//         },
+//         error: function () {
+//             console.log('failure');
+//         },
+//     })
+// }

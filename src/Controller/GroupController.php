@@ -22,7 +22,6 @@ class GroupController extends AbstractController
     {
         $data = $group->getData();
 
-//        dump($data);die();
         return new JsonResponse($data);
     }
 

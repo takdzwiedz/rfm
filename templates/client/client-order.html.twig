@@ -13,9 +13,13 @@
     {% if client_name %}
 
         <div class="form">
-            <h3 class="header">{{ title }} {{ client_name }} w grupie <a href="{{ path('analysis_group_order', {'id_group': id_group }) }}">{{ group_name }}</a></h3>
+            <h3 class="header">{{ title }} {{ client_name }} w grupie <a
+                        href="{{ path('analysis_group_order', {'id_group': id_group }) }}"
+                        title="Wszystkie zamówienia w grupie {{ group_name }}"><strong>{{ group_name }}</strong></a>
+            </h3>
             <div>
-                <form action="{{ path('analysis_client_order', {'id_client': group_order[0]["id_kontrahenta"]}) }}" method="get">
+                <form action="{{ path('analysis_client_order', {'id_client': group_order[0]["id_kontrahenta"]}) }}"
+                      method="get">
                     <div class="row">
                         <div class="col">
                             <input class="form-control" type="date" name="from" value="{{ from ? from : '' }}">
@@ -37,7 +41,7 @@
                 <h4>Brak zamówień kontrahenta w wybranym okresie</h4>
             {% else %}
                 <div class="chart">
-{#                    <div id="div_column_chart"></div>#}
+                    <div id="div_pie_chart"></div>
                 </div>
                 <table id="example" class="table table-striped table-bordered" style="width:100%">
                     <thead>
@@ -74,7 +78,7 @@
 
 
 
-    {%  else %}
+    {% else %}
         <h4>Brak kontrahenta o podanym id</h4>
     {% endif %}
 
@@ -83,7 +87,7 @@
 {% block javascripts %}
     {{ parent() }}
     <script type="text/javascript">
-{#        {{ gc_draw([column_chart], ['div_column_chart']) }}#}
+        {{ gc_draw([pie_chart], ['div_pie_chart']) }}
     </script>
     <script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>

@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\QueryLogic\ClientOrder;
 use App\QueryLogic\GroupClient;
 use App\QueryLogic\GroupOrder;
+use App\Service\ChartRender;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -32,7 +33,7 @@ class ClientController extends AbstractController
      * @param GroupOrder $groupOrder
      * @return Response
      */
-    public function clientOrder($id_client, ClientOrder $clientOrder, GroupOrder $groupOrder, Request $request)
+    public function clientOrder($id_client, ClientOrder $clientOrder, GroupOrder $groupOrder, Request $request, ChartRender $chartRender)
     {
 
         $from = htmlspecialchars($request->query->get("from"));
@@ -54,6 +55,21 @@ class ClientController extends AbstractController
 
         $clientOrder = $clientOrder->getData($id_client);
 
+
+
+        $arr = [
+            ['Nazwa użytkownika', 'Wartość zamowienń netto']
+        ];
+        if ($clientOrder) {
+            foreach ($clientOrder as $order) {
+                $arr[] = [
+                    $order['username_name'], floatval($order['net_sum'])
+                ];
+            }
+        }
+
+        $pieChart = $chartRender->pieChart($arr, 'Udział użytkowników w zamówieniach netto');
+
         $data = [
             'title' => 'Zamówienia kontrahenta',
             'client_name' => $clientName,
@@ -63,6 +79,7 @@ class ClientController extends AbstractController
             'group_order' => $groupOrder,
             'from' => $from,
             'to' => $to,
+            'pie_chart' => $pieChart,
         ];
         dump($data);
         return $this->render("client/client-order.html.twig", $data);

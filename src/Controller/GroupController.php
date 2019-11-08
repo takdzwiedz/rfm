@@ -70,7 +70,7 @@ class GroupController extends AbstractController
                 'Łączna wartośc zamówień netto',
                 'Ilośc kontrahentów w grupie'
             );
-            $chart->getOptions()->setColors(['blue', 'orange', 'yellow']);
+            $chart->getOptions()->setColors(['green', 'orange', 'yellow']);
         }
         $data = [
             'client_group' => $clientGroup,

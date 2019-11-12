@@ -11,10 +11,22 @@
 {% block body %}
     {% if client_exist %}
         {% if user_exist %}
+
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{{ path('analysis_group_order_all') }}">Kontrahenci</a></li>
+                    <li class="breadcrumb-item"><a href="{{ path('analysis_group_order', {'id_group': user_client_order_detail[0].id_group } ) }}">{{ user_client_order_detail[0].group_name }}</a></li>
+                    <li class="breadcrumb-item"><a href="{{ path('analysis_client_order', { 'id_client': user_client_order_detail[0].id_client}) }}">{{ user_client_order_detail[0].client_name }}</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">{{ user_client_order_detail[0].imie_nazwisko }}</li>
+                </ol>
+            </nav>
+
             <div class="art-container">
                 <div class="form">
-                    <h3 class="header">{{ title }} {{ user_exist[0].imie_nazwisko }} u
-                        kontrahenta {{ client_exist[0].nazwa_kontrahenta }}
+                    <h3 class="header">
+                        <strong>
+                            {{ title }} {{ user_exist[0].imie_nazwisko }}
+                        </strong>
                     </h3>
                     <div>
                         <form action="{{ path('analysis_user_order', {'id_client':  client_exist[0].id, 'id_user': user_exist[0].id_auth }) }}"
@@ -58,7 +70,12 @@
                         {% for order in user_client_order %}
                             <tr>
                                 <td></td>
-                                <td>{{ order.numer_zamowienia }}</td>
+                                <td>
+                                    <a href="{{ path('analysis_order_list', {'id_order': order.id_ezamowienia}) }}">
+                                        {{ order.numer_zamowienia }}
+                                    </a>
+
+                                </td>
                                 <td>{{ order.data_zlozenia }} </td>
                                 <td>{{ order.data_realizacji }} </td>
                                 <td>{{ order.wartosc_netto }}</td>

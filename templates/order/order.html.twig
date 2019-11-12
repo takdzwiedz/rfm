@@ -17,6 +17,7 @@
 
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{{ path('analysis_group_order_all') }}">Kontrahenci</a></li>
                 <li class="breadcrumb-item"><a href="{{ path('analysis_group_order', {'id_group': order_details[0].id_group}) }}">{{ order_details[0].group_name }}</a></li>
                 <li class="breadcrumb-item"><a href="{{ path('analysis_client_order', { 'id_client': order_details[0].id_client}) }}">{{ order_details[0].client_name }}</a></li>
                 <li class="breadcrumb-item"><a href="{{ path('analysis_user_order', {'id_client': order_details[0].id_client, 'id_user': order_details[0].id_auth }) }}">

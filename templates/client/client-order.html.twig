@@ -11,10 +11,17 @@
 {% block body %}
     {% if client_name %}
 
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{{ path('analysis_group_order_all') }}">Kontrahenci</a></li>
+                <li class="breadcrumb-item"><a href="{{ path('analysis_group_order', {'id_group': id_group } ) }}">{{ group_name }}</a></li>
+                <li class="breadcrumb-item active" aria-current="page">{{ client_name }}</li>
+            </ol>
+        </nav>
+
+
         <div class="form">
-            <h3 class="header">{{ title }} {{ client_name }} w grupie <a
-                        href="{{ path('analysis_group_order', {'id_group': id_group }) }}"
-                        title="Wszystkie zamówienia w grupie {{ group_name }}"><strong>{{ group_name }}</strong></a>
+            <h3 class="header"><strong>{{ title }} {{ client_name }}</strong></a>
             </h3>
             <div>
                 <form action="{{ path('analysis_client_order', {'id_client': group_order[0]["id_kontrahenta"]}) }}"

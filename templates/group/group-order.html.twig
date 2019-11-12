@@ -10,8 +10,15 @@
 
     {% if group %}
 
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{{ path('analysis_group_order_all') }}">Kontrahenci</a></li>
+                <li class="breadcrumb-item active" aria-current="page">{{ group_name }}</li>
+            </ol>
+        </nav>
+
         <div class="form">
-            <h3 class="header">{{ title }} w grupie {{ group_name }}</h3>
+            <h3 class="header">Zamówienia grupy {{ group_name }}</h3>
             <div>
                 <form action="{{ path('analysis_group_order', {'id_group' : id_group}) }}" method="get">
                     <div class="row">

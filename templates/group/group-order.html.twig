@@ -18,7 +18,11 @@
         </nav>
 
         <div class="form">
-            <h3 class="header">Zamówienia grupy {{ group_name }}</h3>
+            <h3 class="header">
+                <strong>
+                    Zamówienia grupy {{ group_name }}
+                </strong>
+            </h3>
             <div>
                 <form action="{{ path('analysis_group_order', {'id_group' : id_group}) }}" method="get">
                     <div class="row">
@@ -47,7 +51,7 @@
                 <table id="example" class="table table-striped table-bordered" style="width:100%">
                     <thead>
                     <tr>
-                        <th>Id kontrhenta</th>
+                        <th>Lp</th>
                         <th>Nazwa kontrhenta</th>
                         <th>Ilość zamówień kontrahenta</th>
                         <th>Wartość zamówień netto</th>
@@ -57,7 +61,7 @@
                     <tbody>
                     {% for client in order_group %}
                         <tr>
-                            <td>{{ client.id_kontrahenta }} </td>
+                            <td></td>
                             <td>
                                 <a href="{{ path('analysis_client_order', {'id_client': client.id_kontrahenta }) }}" title="Zamówienia użytkowników kontrahenta {{ client.nazwa_kontrahenta }}">{{ client.nazwa_kontrahenta }}</a>
                             </td>

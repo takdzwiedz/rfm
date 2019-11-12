@@ -12,7 +12,12 @@
 {% block body %}
 
     <div class="form">
-        <h3 class="header">{{ title }}</h3>
+        <h3 class="header">
+            <strong>
+                Zamówienia w grupach
+            </strong>
+
+        </h3>
         <div>
             <form action="{{ path('analysis_group_order_all') }}" method="get">
                 <div class="row">

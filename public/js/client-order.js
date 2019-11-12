@@ -24,7 +24,7 @@ $(document).ready(function () {
 
             // Total over all pages
             total = api
-                .column(5)
+                .column(4)
                 .data()
                 .reduce(function (a, b) {
                     return intVal(a) + intVal(b);
@@ -33,7 +33,7 @@ $(document).ready(function () {
 
             // Total over this page
             pageTotal = api
-                .column(5, {page: 'current'})
+                .column(4, {page: 'current'})
                 .data()
                 .reduce(function (a, b) {
                     return intVal(a) + intVal(b);
@@ -41,7 +41,7 @@ $(document).ready(function () {
             pageTotal = (Math.round(pageTotal * 100)/100).toFixed(2);
 
             // Update footer
-            $(api.column(5).footer()).html(
+            $(api.column(4).footer()).html(
                 pageTotal +
                 ' ('
                 + tatal

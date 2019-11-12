@@ -53,7 +53,6 @@
                     <thead>
                     <tr>
                         <th>Lp.</th>
-                        <th>Id uzytkownika</th>
                         <th>Nazwa użytkownika</th>
                         <th>Ilość zamówień</th>
                         <th>Wartość zamówień netto</th>
@@ -64,7 +63,6 @@
                     {% for user in client_order %}
                         <tr>
                             <td></td>
-                            <td>{{ user.id_user }}</td>
                             <td><a href="{{ path('analysis_user_order', {'id_client': app.request.attributes.get('_route_params')['id_client'], 'id_user': user.id_user}) }}">{{ user.username_name }}</a></td>
                             <td>{{ user.order_quantity }} </td>
                             <td>{{ user.net_sum }}</td>
@@ -74,7 +72,7 @@
                     </tbody>
                     <tfoot>
                     <tr>
-                        <th colspan="5" style="text-align:right">Łącznie:</th>
+                        <th colspan="4" style="text-align:right">Łącznie:</th>
                         <th></th>
                     </tr>
                     </tfoot>

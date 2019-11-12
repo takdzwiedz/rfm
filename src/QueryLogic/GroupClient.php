@@ -23,6 +23,11 @@ class GroupClient
         $this->connection = $connection;
     }
 
+    /**
+     * lista wszystkich kontrahentów
+     * @param null $id_grupy
+     * @return mixed[]
+     */
     public function getData($id_grupy = null)
     {
         $query =

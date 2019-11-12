@@ -47,7 +47,7 @@ class ClientOrder
             $query .= " AND z.data_zlozenia <= CAST('" . $to . "' AS DATE)";
         }
         $query .= "GROUP BY ua.id_auth ORDER BY order_quantity DESC";
-//        dump($query);
+        dump($query);
         return $this->connection->fetchAll($query);
     }
 }

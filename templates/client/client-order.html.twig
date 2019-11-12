@@ -9,7 +9,6 @@
 {% endblock %}
 
 {% block body %}
-
     {% if client_name %}
 
         <div class="form">
@@ -59,7 +58,7 @@
                         <tr>
                             <td></td>
                             <td>{{ user.id_user }}</td>
-                            <td>{{ user.username_name }} </td>
+                            <td><a href="{{ path('analysis_user_order', {'id_client': app.request.attributes.get('_route_params')['id_client'], 'id_user': user.id_user}) }}">{{ user.username_name }}</a></td>
                             <td>{{ user.order_quantity }} </td>
                             <td>{{ user.net_sum }}</td>
                             <td>{{ user.gross_sum }}</td>

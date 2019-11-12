@@ -26,7 +26,7 @@ class Client
         $this->connection = $connection;
     }
 
-    public function getData($group = null)
+    public function getData($group = null, $id_client = null)
     {
         $query =
             "
@@ -45,7 +45,11 @@ class Client
             $query .= "
                 AND nazwa_grupy = '" . $group. "'";
         }
-
+        if($id_client) {
+            $query .= "
+                AND k.id = '" . $id_client. "'";
+        }
+//        dump($query);
         return $this->connection->fetchAll($query);
     }
 }

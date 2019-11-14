@@ -1,5 +1,7 @@
 {% extends 'base.html.twig' %}
 
+{% block title %}{{ title }}{% endblock %}
+
 {% block stylesheets %}
     {{ parent() }}
     <link rel="stylesheet" type="text/css" href="{{ asset('css/order-product-group.css') }}">
@@ -12,7 +14,9 @@
 
     <div class="form">
 
-        <h3 class="header">{{ title }}</h3>
+        <h3 class="header"><strong>
+                {{ title }}
+            </strong></h3>
 
         <div>
             <form action="{{ path('analysis_product') }}" method="get">
@@ -84,9 +88,6 @@
 
 {% endblock %}
 
-{% block title %}
-
-{% endblock %}
 
 {% block javascripts %}
     {{ parent() }}

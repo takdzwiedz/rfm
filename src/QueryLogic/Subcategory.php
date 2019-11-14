@@ -43,7 +43,7 @@ class Subcategory
         return $orderGroupOrders = $this->connection->fetchAll($query);
     }
 
-    public function getSubcategoryData($id_subcategory)
+    public function getSubcategoryData($id_subcategory, $from = null, $to = null)
     {
         $query =
             "
@@ -56,11 +56,21 @@ class Subcategory
             FROM zamowienia z
                      LEFT JOIN zamowienia_pozycje zp on z.id_ezamowienia = zp.id_ezamowienia
                      LEFT JOIN artykuly a on zp.id_artykulu = a.id_artykulu
-            WHERE a.id_ekategorii = '". $id_subcategory ."'
+            WHERE a.id_ekategorii = '". $id_subcategory ."'           
+            ";
+
+        if ($from) {
+            $query .= " AND z.data_zlozenia >= '" . $from . "'";
+        }
+        if ($to) {
+            $query .= " AND z.data_zlozenia <= '" . $to . "'";
+        }
+
+        $query .= "
             GROUP BY zp.id_artykulu
             ORDER BY net_sum_op DESC;
-            
-            ";
+        ";
+        dump($query);
 
         return $orderGroupOrders = $this->connection->fetchAll($query);
     }

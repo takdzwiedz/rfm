@@ -7,6 +7,7 @@ use App\QueryLogic\ProductSubcategory;
 use App\QueryLogic\Subcategory;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
 class SubcategoryController extends AbstractController
@@ -23,13 +24,19 @@ class SubcategoryController extends AbstractController
     /**
      * @Route("/subcategory-product/{id_subcategory}", name="analysis_subcategory_product")
      */
-    public function subcategoryProduct($id_subcategory, Subcategory $subcategory)
+    public function subcategoryProduct(Request $request, $id_subcategory, Subcategory $subcategory)
     {
-        $subcategoryProducts = $subcategory->getSubcategoryData($id_subcategory);
+        $from = htmlspecialchars($request->query->get("from"));
+        $to = htmlspecialchars($request->query->get("to"));
+
+        $subcategoryProducts = $subcategory->getSubcategoryData($id_subcategory, $from, $to);
 
         $data = [
+            'title' => 'Zamówienia artykułów w podkategoriach',
             'controller_name' => 'SubcategoryController',
-            'subcategory_product' => $subcategoryProducts
+            'subcategory_product' => $subcategoryProducts,
+            'from' => $from,
+            'to' => $to,
         ];
         dump($data);
         return $this->render('subcategory/subcategory.html.twig', $data);
@@ -38,12 +45,18 @@ class SubcategoryController extends AbstractController
     /**
      * @Route("/product-sale/{id_product}", name="analysis_product_sale")
      */
-    public function productSale($id_product, ProductSale $productSale)
+    public function productSale(Request $request, $id_product, ProductSale $productSale)
     {
+        $from = htmlspecialchars($request->query->get("from"));
+        $to = htmlspecialchars($request->query->get("to"));
+
         $productSaleDetail = $productSale->getData($id_product);
 
         $data = [
-            'product_sale_detail' => $productSaleDetail
+            'title' => 'Dane sprzedażowe artykułu',
+            'product_sale_detail' => $productSaleDetail,
+            'from' => $from,
+            'to' => $to,
         ];
         dump($data);
         return $this->render("product/product-sale.html.twig", $data);

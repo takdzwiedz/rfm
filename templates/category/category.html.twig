@@ -1,5 +1,7 @@
 {% extends 'base.html.twig' %}
 
+{% block title %}{{ title }}{% endblock %}
+
 {% block stylesheets %}
     {{ parent() }}
     <link rel="stylesheet" type="text/css" href="{{ asset('css/order-product-group.css') }}">
@@ -10,40 +12,78 @@
 
 {% block body %}
 
-    <table id="example" class="table table-striped table-bordered" style="width:100%">
-        <thead>
-        <tr>
-            <th>L.p.</th>
-            <th>Id kategorii</th>
-            <th>Nazwa kategorii</th>
-            <th>Ilość sprzedanych produktow</th>
-            <th>Suma netto sprzedanych produktow</th>
-            <th>Suma brutto sprzedanych produktow</th>
-        </tr>
-        </thead>
-        <tbody>
-        {% for row in category_product %}
+    <div class="form">
+        <h3 class="header"><strong>
+                {{ title }}
+            </strong></h3>
+        <div>
+            <form action="{{ path(
+                'analysis_category_product', {
+                    'id_parent': app.request.attributes.get('_route_params')['id_parent'],
+                    'id_category': app.request.attributes.get('_route_params')['id_category']}
+            ) }}" method="get">
+
+                <div class="row">
+                    <div class="col">
+                        <input type="date" data-provide="datepicker" class="datepicker form-control" name="from"
+                               value="{{ from ? from : '' }}">
+                    </div>
+                    <div class="col">
+                        <input type="date" class="form-control" name="to" value="{{ to ? to : '' }}">
+                    </div>
+                    <div class="col">
+                        <button class="btn btn-success" type="submit">Przeszukaj</button>
+                        <a href="{{ path('analysis_category_product', {
+                            'from': '',
+                            'to': '',
+                            'id_parent': app.request.attributes.get('_route_params')['id_parent'],
+                            'id_category': app.request.attributes.get('_route_params')['id_category']
+                        }) }}"
+                           class="btn btn-info" role="button">Resetuj</a>
+                    </div>
+                </div>
+            </form>
+
+        </div>
+    </div>
+    {% if category_product %}
+        <table id="example" class="table table-striped table-bordered" style="width:100%">
+            <thead>
             <tr>
-                <td></td>
-                <td>{{ row.id_category }} </td>
-                <td>
-                    <a href="{{ path('analysis_subcategory_product', {'id_subcategory': row.id_category}) }}">
-                        {{ row.category_name }}
-                    </a>
-                </td>
-                <td>{{ row.quantity }}</td>
-                <td>{{ row.net_sum }}</td>
-                <td>{{ row.gross_sum }}</td>
+                <th>L.p.</th>
+                <th>Id kategorii</th>
+                <th>Nazwa kategorii</th>
+                <th>Ilość sprzedanych produktow</th>
+                <th>Suma netto sprzedanych produktow</th>
+                <th>Suma brutto sprzedanych produktow</th>
             </tr>
-        {% endfor %}
-        </tbody>
-        <tfoot>
-        <tr>
-            <th colspan="5" style="text-align:right">Łącznie:</th>
-            <th></th>
-        </tr>
-        </tfoot>
-    </table>
+            </thead>
+            <tbody>
+            {% for row in category_product %}
+                <tr>
+                    <td></td>
+                    <td>{{ row.id_category }} </td>
+                    <td>
+                        <a href="{{ path('analysis_subcategory_product', {'id_subcategory': row.id_category}) }}">
+                            {{ row.category_name }}
+                        </a>
+                    </td>
+                    <td>{{ row.quantity }}</td>
+                    <td>{{ row.net_sum }}</td>
+                    <td>{{ row.gross_sum }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+            <tfoot>
+            <tr>
+                <th colspan="5" style="text-align:right">Łącznie:</th>
+                <th></th>
+            </tr>
+            </tfoot>
+        </table>
+    {% else %}
+        <h3>Brak zamówień w wybranym okresie</h3>
+    {% endif %}
 
 
 {% endblock %}
@@ -52,7 +92,7 @@
     {{ parent() }}
     <script>
 
-{#        {{ gc_draw([bar_chart], ['div_bar_chart']) }}#}
+        {#        {{ gc_draw([bar_chart], ['div_bar_chart']) }}#}
 
     </script>
 

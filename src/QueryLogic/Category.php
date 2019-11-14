@@ -114,7 +114,7 @@ class Category
             $query .= " AND z.data_zlozenia >= '" . $from . "'";
         }
         if ($to) {
-            $query .= " AND z.data_zlozenia <= '" . $from . "'";
+            $query .= " AND z.data_zlozenia <= '" . $to . "'";
         }
 
         $query .= "

@@ -36,7 +36,7 @@ class GroupController extends AbstractController
     public function groupOrderAll(Request $request, ChartRender $chartRender, GroupOrder $groupOrder, OrderGroup $orderGroup
     )
     {
-        $titleOrderGroup = "Wartość zamówień kontrahentów w grupach w wybranym okresie";
+        $title = "Zamówienia w grupach";
         $from = htmlspecialchars($request->query->get("from"));
         $to = htmlspecialchars($request->query->get("to"));
         $chart = [];
@@ -75,7 +75,7 @@ class GroupController extends AbstractController
         $data = [
             'client_group' => $clientGroup,
             'bar_chart' => $chart,
-            'title' => $titleOrderGroup,
+            'title' => $title,
             'from' => $from,
             'to' => $to,
             'sum_net' => $sumNet,

@@ -1,5 +1,7 @@
 {% extends 'base.html.twig' %}
 
+{% block title %}{{ title }}{% endblock %}
+
 {% block stylesheets %}
     {{ parent() }}
     <link rel="stylesheet" type="text/css" href="{{ asset('css/order-product-group.css') }}">
@@ -9,6 +11,39 @@
 {% endblock %}
 
 {% block body %}
+
+
+    <div class="form">
+        <h3 class="header"><strong>
+                {{ title }}
+            </strong></h3>
+        <div>
+            <form action="{{ path(
+                'analysis_subcategory_product', {
+                    'id_subcategory': app.request.attributes.get('_route_params')['id_subcategory']}
+            ) }}" method="get">
+
+                <div class="row">
+                    <div class="col">
+                        <input type="date" data-provide="datepicker" class="datepicker form-control" name="from"
+                               value="{{ from ? from : '' }}">
+                    </div>
+                    <div class="col">
+                        <input type="date" class="form-control" name="to" value="{{ to ? to : '' }}">
+                    </div>
+                    <div class="col">
+                        <button class="btn btn-success" type="submit">Przeszukaj</button>
+                        <a href="{{ path('analysis_subcategory_product', {
+                            'from': '',
+                            'to': '',
+                            'id_subcategory': app.request.attributes.get('_route_params')['id_subcategory']
+                        }) }}"
+                           class="btn btn-info" role="button">Resetuj</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
 
     <table id="example" class="table table-striped table-bordered" style="width:100%">
         <thead>

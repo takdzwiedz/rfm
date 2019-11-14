@@ -15,7 +15,7 @@
         <tr>
             <th>L.p.</th>
             <th>Id produktu</th>
-            <th>Nazwa producktu</th>
+            <th>Nazwa produktu</th>
             <th>Ilość sprzedanych produktow</th>
             <th>Suma netto sprzedanych produktow</th>
             <th>Suma brutto sprzedanych produktow</th>
@@ -26,7 +26,12 @@
             <tr>
                 <td></td>
                 <td>{{ row.id_product }} </td>
-                <td>{{ row.product_name }} </td>
+                <td>
+                    <a href="{{ path('analysis_product_sale', {'id_product': row.id_product}) }}">
+
+                        {{ row.product_name }}
+                    </a>
+                </td>
                 <td>{{ row.quantity }}</td>
                 <td>{{ row.net_sum }}</td>
                 <td>{{ row.gross_sum }}</td>

@@ -26,7 +26,11 @@
             <tr>
                 <td></td>
                 <td>{{ row.id_category }} </td>
-                <td>{{ row.category_name }} </td>
+                <td>
+                    <a href="{{ path('analysis_subcategory_product', {'id_subcategory': row.id_category}) }}">
+                        {{ row.category_name }}
+                    </a>
+                </td>
                 <td>{{ row.quantity }}</td>
                 <td>{{ row.net_sum }}</td>
                 <td>{{ row.gross_sum }}</td>

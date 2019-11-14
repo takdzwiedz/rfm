@@ -48,6 +48,6 @@ class ProductController extends AbstractController
             'bar_chart' => $barChart,
         ];
         dump($data);
-        return $this->render('product/product-category.twig', $data);
+        return $this->render('product/product-category.html.twig', $data);
     }
 }

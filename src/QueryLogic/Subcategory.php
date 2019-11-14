@@ -64,5 +64,4 @@ class Subcategory
 
         return $orderGroupOrders = $this->connection->fetchAll($query);
     }
-
 }

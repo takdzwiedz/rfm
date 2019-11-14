@@ -32,12 +32,12 @@ class Subcategory
                 (
                 SELECT id_kategorii, id_ojca, nazwa_kategorii FROM ekategorie
                 ) s on e.id_ojca = s.id_kategorii
-            WHERE e.id_ojca = '". $id_parent ."'
+            WHERE e.id_ojca = '" . $id_parent . "'
         ";
-        if($id_parent == 0) {
+        if ($id_parent == 0) {
             $query .=
                 "
-                AND e.id_kategorii = '". $id_subcategory ."'
+                AND e.id_kategorii = '" . $id_subcategory . "'
                 ";
         }
         return $orderGroupOrders = $this->connection->fetchAll($query);
@@ -56,7 +56,7 @@ class Subcategory
             FROM zamowienia z
                      LEFT JOIN zamowienia_pozycje zp on z.id_ezamowienia = zp.id_ezamowienia
                      LEFT JOIN artykuly a on zp.id_artykulu = a.id_artykulu
-            WHERE a.id_ekategorii = '". $id_subcategory ."'           
+            WHERE a.id_ekategorii = '" . $id_subcategory . "'           
             ";
 
         if ($from) {
@@ -70,6 +70,28 @@ class Subcategory
             GROUP BY zp.id_artykulu
             ORDER BY net_sum_op DESC;
         ";
+        dump($query);
+
+        return $orderGroupOrders = $this->connection->fetchAll($query);
+    }
+
+    public function getSubcategoryDetail($id_category)
+    {
+        $query =
+            "
+            SELECT e.nazwa_kategorii category_name,
+                   e.id_ojca id_parent,
+                   IFNULL(s.nazwa_kategorii, e.nazwa_kategorii) main_category_name
+            FROM ekategorie e
+                     LEFT JOIN
+                 (
+                     SELECT id_kategorii, id_ojca, nazwa_kategorii
+                     FROM ekategorie
+                 ) s on e.id_ojca = s.id_kategorii
+            
+            WHERE e.id_kategorii = '" . $id_category . "';
+            ";
+
         dump($query);
 
         return $orderGroupOrders = $this->connection->fetchAll($query);

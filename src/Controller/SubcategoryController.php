@@ -30,11 +30,14 @@ class SubcategoryController extends AbstractController
         $to = htmlspecialchars($request->query->get("to"));
 
         $subcategoryProducts = $subcategory->getSubcategoryData($id_subcategory, $from, $to);
+        $subcategoryDetail = $subcategory->getSubcategoryDetail($id_subcategory);
+
 
         $data = [
             'title' => 'Zamówienia artykułów w podkategoriach',
             'controller_name' => 'SubcategoryController',
             'subcategory_product' => $subcategoryProducts,
+            'subcategory_detail' => $subcategoryDetail,
             'from' => $from,
             'to' => $to,
         ];

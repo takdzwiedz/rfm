@@ -12,6 +12,19 @@
 
 {% block body %}
 
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{{ path('analysis_product') }}">Produkty</a></li>
+            <li class="breadcrumb-item"><a href="{{ path('analysis_category_product', {
+                    'id_parent': product_sale_detail[0].id_parent,
+                    'id_category': product_sale_detail[0].id_category
+                }) }}">{{ product_sale_detail[0].main_category_name }}</a></li>
+            <li class="breadcrumb-item"><a href="{{ path('analysis_subcategory_product', { 'id_subcategory': product_sale_detail[0].id_category}) }}">{{ product_sale_detail[0].category_name }}</a></li>
+
+            <li class="breadcrumb-item active" aria-current="page">{{ product_sale_detail[0].product_name }}</li>
+        </ol>
+    </nav>
+
     <div class="form">
         <h3 class="header"><strong>
                 {{ title }}

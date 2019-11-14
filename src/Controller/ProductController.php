@@ -22,24 +22,14 @@ class ProductController extends AbstractController
 
         $orderGroup = $productGroup->getData($from, $to);
 
-        $categories = [];
-
-        if ($orderGroup) {
-            foreach ($orderGroup as $row) {
-                if (!array_search($row["nazwa_kategorii"], $categories)) {
-                    $categories[] = $row["nazwa_kategorii"];
-                }
-            }
-        }
-
         $barChartData = [
             ['Nazwa kategorii', 'Ilość sprzedanych produktów', 'Suma netto sprzedanych produktów']
         ];
         foreach ($orderGroup as $row) {
             $barChartData[] = [
-                $row["nazwa_kategorii"],
-                floatval($row["ilosc_sprzedanych_produktow"]),
-                floatval($row["suma_netto_sprzedanych_produktow"])
+                $row["category_name"],
+                floatval($row["quantity"]),
+                floatval($row["sum_net"])
             ];
         }
 
@@ -53,7 +43,6 @@ class ProductController extends AbstractController
         $data = [
             'title' => $title,
             'data' => $orderGroup,
-            'categories' => $categories,
             'from' => $from,
             'to' => $to,
             'bar_chart' => $barChart,

@@ -220,7 +220,7 @@ class AnalysisController extends AbstractController
             $columnChart->getOptions()->setColors('purple');
         }
 
-        return $this->render('analysis/order-product-group.html.twig', [
+        $data = [
             'title' => $title,
             'title_2' => $title2,
             'data' => $orderGroup,
@@ -231,6 +231,9 @@ class AnalysisController extends AbstractController
             'bar_chart' => $barChart,
             'column_chart' => $columnChart,
             'order_sub_groups' => $orderSubGroup
-        ]);
+
+        ];
+dump($data);
+        return $this->render('analysis/order-product-group.html.twig', $data);
     }
 }

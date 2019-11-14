@@ -30,7 +30,8 @@ class OrderProductGroup
         $query = "
         SELECT
                e.id_ojca                                       id_ojca,
-               IFNULL(s.nazwa_kategorii, e.nazwa_kategorii) as nazwa_kategorii,
+               e.id_kategorii                                  id_kategorii,
+               IFNULL(IFNULL(s.nazwa_kategorii, e.nazwa_kategorii), 'Brak przyporządkowanej kategorii') as nazwa_kategorii,
                SUM(zp.ilosc)                                as ilosc_sprzedanych_produktow,
                SUM(zp.cena_netto * zp.ilosc)                as suma_netto_sprzedanych_produktow
         FROM zamowienia_pozycje zp
@@ -52,6 +53,7 @@ class OrderProductGroup
             GROUP BY IF(e.id_ojca = 0, id_ekategorii, e.id_ojca)
             ORDER BY suma_netto_sprzedanych_produktow DESC;
        ";
+        dump($query);
         return $orderGroupOrders = $this->connection->fetchAll($query);
     }
 
@@ -87,7 +89,7 @@ class OrderProductGroup
             GROUP BY e.id_kategorii
             ORDER BY suma_netto_sprzedanych_produktow DESC;
         ";
-
+dump($query);
         return $orderSubGroup = $this->connection->fetchAll($query);
     }
 

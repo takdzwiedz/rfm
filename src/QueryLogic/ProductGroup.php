@@ -18,15 +18,21 @@ class ProductGroup
         $this->connection = $connection;
     }
 
+    /**
+     * @param null $from
+     * @param null $to
+     * @return mixed[]
+     */
     public function getData($from = null, $to = null)
     {
         $query = "
         SELECT
-               e.id_ojca                                    as id_ojca,
-               IFNULL(s.nazwa_kategorii, e.nazwa_kategorii) as nazwa_kategorii,
-               SUM(zp.ilosc)                                as ilosc_sprzedanych_produktow,
-               SUM(zp.cena_netto * zp.ilosc)                as suma_netto_sprzedanych_produktow,
-               SUM(zp.cena_brutto * zp.ilosc)               as suma_brutto_sprzedanych_produktow
+               e.id_ojca                                                                                as id_parent,
+               e.id_kategorii                                                                           as id_category,
+               IFNULL(IFNULL(s.nazwa_kategorii, e.nazwa_kategorii), 'Produkty nieskategoryzowane') as category_name,
+               SUM(zp.ilosc)                                                                            as quantity,
+               SUM(zp.cena_netto * zp.ilosc)                                                            as sum_net,
+               SUM(zp.cena_brutto * zp.ilosc)                                                           as sum_gross
         FROM zamowienia_pozycje zp
                  LEFT JOIN artykuly a on zp.id_artykulu = a.id_artykulu
                  LEFT JOIN ekategorie e on a.id_ekategorii = e.id_kategorii
@@ -43,8 +49,11 @@ class ProductGroup
         }
 
         $query .= "
-            GROUP BY IF(e.id_ojca = 0, id_ekategorii, e.id_ojca)
-            ORDER BY suma_netto_sprzedanych_produktow DESC;
+             GROUP BY CASE
+                 WHEN e.id_ojca = 0 THEN id_ekategorii
+                 ELSE e.id_ojca
+                 END
+             ORDER BY sum_net    DESC;
        ";
         return $orderGroupOrders = $this->connection->fetchAll($query);
     }

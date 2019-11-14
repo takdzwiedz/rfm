@@ -59,14 +59,13 @@
                 {% for row in data %}
                     <tr>
                         <td></td>
-                        <td>{% if row.nazwa_kategorii %}
-                                {{ row.nazwa_kategorii }}
-                            {% else %}
-                                Brak przypisanej kategorii
-                            {% endif %}</td>
-                        <td>{{ row.ilosc_sprzedanych_produktow }}</td>
-                        <td>{{ row.suma_netto_sprzedanych_produktow }}</td>
-                        <td>{{ row.suma_brutto_sprzedanych_produktow }}</td>
+                        <td>
+                            <a href="{{ path('analysis_category_product', {'id_parent': row.id_parent ? row.id_parent : 0 , 'id_category': row.id_category ? row.id_category : 0 }) }}"
+                            > {{ row.category_name }}</a>
+                        </td>
+                        <td>{{ row.quantity }}</td>
+                        <td>{{ row.sum_net }}</td>
+                        <td>{{ row.sum_gross }}</td>
                     </tr>
                 {% endfor %}
                 </tbody>

@@ -12,7 +12,6 @@
 
 {% block body %}
 
-
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="{{ path('analysis_product') }}">Produkty</a></li>
@@ -20,9 +19,6 @@
                     'id_parent': subcategory_detail[0].id_parent,
                     'id_category': app.request.attributes.get('_route_params')['id_subcategory']
                 }) }}">{{ subcategory_detail[0].main_category_name }}</a></li>
-            {#            <li class="breadcrumb-item"><a href="{{ path('analysis_client_order', { 'id_client': order_details[0].id_client}) }}">{{ order_details[0].client_name }}</a></li>#}
-            {#            <li class="breadcrumb-item"><a href="{{ path('analysis_user_order', {'id_client': order_details[0].id_client, 'id_user': order_details[0].id_auth }) }}">#}
-            {#                    {{ order_details[0].user_name }}</a></li>#}
             <li class="breadcrumb-item active" aria-current="page">{{ subcategory_detail[0].category_name }}</li>
         </ol>
     </nav>
@@ -58,6 +54,8 @@
             </form>
         </div>
     </div>
+
+
 
     <table id="example" class="table table-striped table-bordered" style="width:100%">
         <thead>

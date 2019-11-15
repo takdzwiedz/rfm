@@ -35,10 +35,12 @@ class CategoryController extends AbstractController
         $to = htmlspecialchars($request->query->get("to"));
 
         $productCategory = $category->getCategoryData($id_parent, $id_category, $from, $to);
+        $categoryDetail = $category->getCategoryDetail($id_parent);
 
         $data = [
             'title' => 'Sprzedaż artykułów w kategorii głównej',
             'category_product' =>$productCategory,
+            'category_detail' => $categoryDetail,
             'from' => $from,
             'to' => $to,
         ];

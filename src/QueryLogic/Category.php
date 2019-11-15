@@ -60,7 +60,21 @@ class Category
             FROM ekategorie
             WHERE id_ojca = 0
         ";
+        return $orderGroupOrders = $this->connection->fetchAll($query);
+    }
 
+    /**
+     * @param $id_category
+     * @return mixed[]
+     */
+    public function getCategoryDetail($id_category)
+    {
+        $query = "
+            SELECT id_kategorii id_category,
+                   nazwa_kategorii category_name
+            FROM ekategorie
+            WHERE id_kategorii = '". $id_category ."'
+        ";
         return $orderGroupOrders = $this->connection->fetchAll($query);
     }
 

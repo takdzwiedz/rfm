@@ -55,6 +55,8 @@ class ProductGroup
                  END
              ORDER BY sum_net    DESC;
        ";
+
+        dump($query);
         return $orderGroupOrders = $this->connection->fetchAll($query);
     }
 }

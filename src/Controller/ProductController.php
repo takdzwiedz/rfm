@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\QueryLogic\ProductGroup;
+use App\QueryLogic\ProductSale;
 use App\Service\ChartRender;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -12,8 +13,13 @@ class ProductController extends AbstractController
 {
     /**
      * @Route("/product", name="analysis_product")
+     * @param Request $request
+     * @param ProductGroup $productGroup
+     * @param ChartRender $chartRender
+     * @param ProductSale $productSale
+     * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function productGroup(Request $request, ProductGroup $productGroup, ChartRender $chartRender)
+    public function productGroup(Request $request, ProductGroup $productGroup, ChartRender $chartRender, ProductSale $productSale)
     {
         $title = "Sprzedaż artykułów w kategoriach";
 
@@ -39,6 +45,10 @@ class ProductController extends AbstractController
             'Suma sprzedaży netto produktów',
             'Ilość sprzedanych produktów');
         $barChart->getOptions()->setColors(['orange', 'green']);
+
+        $productSale = $productSale->getSaleByMonth();
+
+//        $columnChart = $chartRender->columnChart();
 
         $data = [
             'title' => $title,

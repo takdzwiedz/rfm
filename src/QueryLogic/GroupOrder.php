@@ -48,7 +48,7 @@ class GroupOrder
             $query .= " AND z.data_zlozenia <= CAST('" . $to . "' AS DATE)";
         }
         $query .= " GROUP BY k.id_grupy ORDER BY wartosc_zamowien_netto DESC";
-
+        dump($query);
         return $clientGroup = $this->connection->fetchAll($query);
     }
 

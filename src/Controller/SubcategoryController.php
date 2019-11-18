@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\QueryLogic\ProductSale;
 use App\QueryLogic\ProductSubcategory;
 use App\QueryLogic\Subcategory;
+use App\Service\ChartRender;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -48,18 +49,34 @@ class SubcategoryController extends AbstractController
     /**
      * @Route("/product-sale/{id_product}", name="analysis_product_sale")
      */
-    public function productSale(Request $request, $id_product, ProductSale $productSale)
+    public function productSale(Request $request, $id_product, ProductSale $productSale, ChartRender $chartRender)
     {
         $from = htmlspecialchars($request->query->get("from"));
         $to = htmlspecialchars($request->query->get("to"));
 
-        $productSaleDetail = $productSale->getData($id_product);
+        $productSaleDetail = $productSale->getData($id_product, $from, $to);
+
+        $productSaleData = $productSale->getSaleByMonth($id_product);
+
+        $arr = [
+            ['Miesiąc', 'Sprzedaż']
+        ];
+
+        foreach ($productSaleData as $item) {
+            $arr[] = [$item['month'].'/'.$item['year'], floatval($item['sum'])];
+        }
+
+        $columnChart = $chartRender->columnChart($arr, 'Sprzedaż produktu');
+        $columnChart->getOptions()->setColors('#28A745');
 
         $data = [
             'title' => 'Dane sprzedażowe artykułu',
+            'id_product' => $id_product,
             'product_sale_detail' => $productSaleDetail,
+            'product_sale_data' => $productSaleData,
             'from' => $from,
             'to' => $to,
+            'column_chart' => $columnChart,
         ];
         dump($data);
         return $this->render("product/product-sale.html.twig", $data);

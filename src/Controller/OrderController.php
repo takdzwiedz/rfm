@@ -30,6 +30,7 @@ class OrderController extends AbstractController
 
         $data = [
             'title' => 'Zamówienie',
+            'order_number' => $id_order,
             'order' => $orderList,
             'order_details' => $orderDetails
         ];

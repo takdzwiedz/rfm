@@ -13,82 +13,78 @@
 
 
 
-    {% if order_details %}
-
-        <nav aria-label="breadcrumb">
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="{{ path('analysis_group_order_all') }}">Kontrahenci</a></li>
-                <li class="breadcrumb-item"><a href="{{ path('analysis_group_order', {'id_group': order_details[0].id_group}) }}">{{ order_details[0].group_name }}</a></li>
-                <li class="breadcrumb-item"><a href="{{ path('analysis_client_order', { 'id_client': order_details[0].id_client}) }}">{{ order_details[0].client_name }}</a></li>
-                <li class="breadcrumb-item"><a href="{{ path('analysis_user_order', {'id_client': order_details[0].id_client, 'id_user': order_details[0].id_auth }) }}">
-                        {{ order_details[0].user_name }}</a></li>
-                <li class="breadcrumb-item active" aria-current="page">Zamówienie nr {{ order_details[0].order_number }}</li>
-            </ol>
-        </nav>
 
 
-        <h3 class="header">
-            <strong>
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{{ path('analysis_group_order_all') }}">Kontrahenci</a></li>
+            <li class="breadcrumb-item"><a
+                        href="{{ path('analysis_group_order', {'id_group': order_details ? order_details[0].id_group : -1}) }}">{{ order_details ? order_details[0].group_name : 'Zamówienia bez grupy' }}</a>
+            </li>
+            <li class="breadcrumb-item"><a
+                        href="{{ path('analysis_client_order', { 'id_client': order_details ? order_details[0].id_client: -1}) }}">{{ order_details ? order_details[0].client_name : 'Zamówienia bez kontrahenta' }}</a>
+            </li>
+            <li class="breadcrumb-item"><a
+                        href="{{ path('analysis_user_order', {'id_client': order_details ? order_details[0].id_client: -1, 'id_user': order_details ? order_details[0].id_auth : -1 }) }}">
+                    {{ order_details ? order_details[0].user_name: 'Zamówienia bez użytkownika' }}</a></li>
+            <li class="breadcrumb-item active" aria-current="page">
+                {% if order_details %}
+                    Zamówienie nr {{ order_details[0].order_number }}
+                {% else %}
+                    Zamówienie (ezamówienie) nr {{ order_number }}
+                {% endif %}
+            </li>
+        </ol>
+    </nav>
+
+
+    <h3 class="header">
+        <strong>
+            {% if order_details %}
                 {{ title }} nr {{ order_details[0].order_number }}
-            </strong>
-{#            użytkownika#}
+            {% else %}
+                {{ title }} (ezamówienie) {{ order_number }}
+            {% endif %}
+        </strong>
 
-{#                <a href="{{ path('analysis_user_order', {'id_client': order_details[0].id_client, 'id_user': order_details[0].id_auth }) }}">#}
-{#                    <strong>#}
-{#                        {{ order_details[0].user_name }}#}
-{#                    </strong>#}
-{#                </a>#}
-{#            kontrahenta#}
-{#                <a href="{{ path('analysis_client_order', { 'id_client': order_details[0].id_client}) }}">#}
-{#                    <strong>#}
-{#                        {{ order_details[0].client_name }}#}
-{#                    </strong>#}
-{#                </a>#}
-{#            w grupie#}
-{#                <a href="{{ path('analysis_group_order', {'id_group': order_details[0].id_group}) }}">#}
-{#                    <strong>#}
-{#                        {{ order_details[0].group_name }}#}
-{#                    </strong>#}
-{#                </a>#}
-
-        </h3>
-        <table id="example" class="table table-striped table-bordered" style="width:100%">
-            <thead>
+    </h3>
+    <table id="example" class="table table-striped table-bordered" style="width:100%">
+        <thead>
+        <tr>
+            <th>Lp.</th>
+            <th>Nazwa produktu</th>
+            <th>Cena jednostkowa netto</th>
+            <th>Cena jednostkowa brutto</th>
+            <th>Ilość</th>
+            <th>Cena netto</th>
+            <th>Cena brutto</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for o in order %}
             <tr>
-                <th>Lp.</th>
-                <th>Nazwa produktu</th>
-                <th>Cena jednostkowa netto</th>
-                <th>Cena jednostkowa brutto</th>
-                <th>Ilość</th>
-                <th>Cena netto</th>
-                <th>Cena brutto</th>
-            </tr>
-            </thead>
-            <tbody>
-            {% for o in order %}
-                <tr>
-                    <td></td>
-                    <td>{{ o.product_name }}</td>
-                    <td>{{ o.unit_net_price }} </td>
-                    <td>{{ o.unit_gross_price }}</td>
-                    <td>{{ o.quantity }} </td>
-                    <td>{{ o.net_price }}</td>
-                    <td>{{ o.gross_price }}</td>
-                </tr>
-            {% endfor %}
-            </tbody>
-            <tfoot>
-            <tr>
-                <th colspan="6" style="text-align:right">Łącznie:</th>
-                <th></th>
-            </tr>
-            </tfoot>
-        </table>
+                <td></td>
+                <td>
+                    <a href="{{ path('analysis_product_sale', { 'id_product': o.id}) }}">
+                        {{ o.product_name }}
+                    </a>
 
-
-    {% else %}
-        <h4>Brak zamówienia o podanym </h4>
-    {% endif %}
+                </td>
+                <td>{{ o.unit_net_price }} </td>
+                <td>{{ o.unit_gross_price }}</td>
+                <td>{{ o.quantity }} </td>
+                <td>{{ o.net_price }}</td>
+                <td>{{ o.gross_price }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+        <tfoot>
+        <tr>
+            <th colspan="6" style="text-align:right">Łącznie:</th>
+            <th></th>
+        </tr>
+        </tfoot>
+    </table>
 
 {% endblock %}
 

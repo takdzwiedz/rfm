@@ -47,18 +47,13 @@ class Subcategory
     {
         $query =
             "
-            SELECT zp.id_artykulu                                     id_product,
-                   a.nazwa_artykulu                                   product_name,
-                   SUM(zp.ilosc)                                      quantity,
+           SELECT zp.id_artykulu                 id_product,
+                   a.nazwa_artykulu               product_name,
+                   SUM(zp.ilosc)                  quantity,
                    SUM(zp.ilosc * zp.cena_netto)  net_sum,
-                   SUM(zp.ilosc * zp.cena_netto)                      net_sum_op,
-                   SUM(zp.ilosc * zp.cena_brutto)
-                       
-                       
-                       
-                       gross_sum
-            FROM zamowienia z
-                     LEFT JOIN zamowienia_pozycje zp on z.id_ezamowienia = zp.id_ezamowienia
+                   SUM(zp.ilosc * zp.cena_netto)  net_sum_op,
+                   SUM(zp.ilosc * zp.cena_brutto) gross_sum
+            FROM zamowienia_pozycje zp
                      LEFT JOIN artykuly a on zp.id_artykulu = a.id_artykulu
             WHERE a.id_ekategorii = '" . $id_subcategory . "'           
             ";

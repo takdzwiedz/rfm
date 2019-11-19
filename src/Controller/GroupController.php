@@ -81,6 +81,7 @@ class GroupController extends AbstractController
             'sum_net' => $sumNet,
             'order_group' => $orderGroup
         ];
+        dump($data);
         return $this->render('group/group-order-all.html.twig', $data);
     }
 

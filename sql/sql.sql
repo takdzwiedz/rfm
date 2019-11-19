@@ -4,7 +4,7 @@ SET lc_time_names = 'pl_PL';
 
 CREATE TABLE kalendarz
 (
-    miesiące DATE
+    miesiace DATE
 );
 
 DELIMITER |

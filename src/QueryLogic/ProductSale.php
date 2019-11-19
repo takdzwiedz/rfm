@@ -110,7 +110,7 @@ class ProductSale
             ";
         }
         $query .= "
-            WHERE k.miesiace >= DATE_SUB(now(), INTERVAL 24 MONTH)
+            WHERE k.miesiace >= DATE_SUB(now(), INTERVAL 12 MONTH)
                   AND k.miesiace <= now()
                 GROUP BY MONTH(k.miesiace), YEAR(k.miesiace)
                 ORDER BY YEAR(k.miesiace), MONTH(k.miesiace);

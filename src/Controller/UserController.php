@@ -22,7 +22,7 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/user-order/{id_client<\d+>}/{id_user<\d+>}", name="analysis_user_order")
+     * @Route("/user-order/{id_client}/{id_user}", name="analysis_user_order")
      */
     public function userOrder($id_client, $id_user, ClientUser $clientUser, Client $client, Request $request)
     {

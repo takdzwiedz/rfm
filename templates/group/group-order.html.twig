@@ -8,12 +8,12 @@
 
 {% block body %}
 
-    {% if group %}
+    {% if order_group %}
 
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="{{ path('analysis_group_order_all') }}">Kontrahenci</a></li>
-                <li class="breadcrumb-item active" aria-current="page">{{ group_name }}</li>
+                <li class="breadcrumb-item active" aria-current="page">{{ group_name ? group_name : 'Zamówienia bez grupy' }}</li>
             </ol>
         </nav>
 
@@ -63,7 +63,7 @@
                         <tr>
                             <td></td>
                             <td>
-                                <a href="{{ path('analysis_client_order', {'id_client': client.id_kontrahenta }) }}" title="Zamówienia użytkowników kontrahenta {{ client.nazwa_kontrahenta }}">{{ client.nazwa_kontrahenta }}</a>
+                                <a href="{{ path('analysis_client_order', {'id_client': client.id_kontrahenta ? client.id_kontrahenta : -1 }) }}" title="Zamówienia użytkowników kontrahenta {{ client.nazwa_kontrahenta }}">{{ client.nazwa_kontrahenta }}</a>
                             </td>
                             <td>{{ client.ilosc_zamowien }} </td>
                             <td>{{ client.wartosc_netto }}</td>

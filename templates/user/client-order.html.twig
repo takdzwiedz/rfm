@@ -9,15 +9,16 @@
 {% endblock %}
 
 {% block body %}
-    {% if client_exist %}
-        {% if user_exist %}
+
 
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="{{ path('analysis_group_order_all') }}">Kontrahenci</a></li>
-                    <li class="breadcrumb-item"><a href="{{ path('analysis_group_order', {'id_group': user_client_order_detail[0].id_group } ) }}">{{ user_client_order_detail[0].group_name }}</a></li>
-                    <li class="breadcrumb-item"><a href="{{ path('analysis_client_order', { 'id_client': user_client_order_detail[0].id_client}) }}">{{ user_client_order_detail[0].client_name }}</a></li>
-                    <li class="breadcrumb-item active" aria-current="page">{{ user_client_order_detail[0].imie_nazwisko }}</li>
+                    <li class="breadcrumb-item"><a href="{{ path('analysis_group_order',
+                            {'id_group': user_client_order_detail[0].id_group ?  user_client_order_detail[0].id_group : -1 } ) }}">
+                            {{ user_client_order_detail[0].group_name ? user_client_order_detail[0].group_name : 'Zamowienia bez grupy' }}</a></li>
+                    <li class="breadcrumb-item"><a href="{{ path('analysis_client_order', { 'id_client': app.request.attributes.get('_route_params')['id_client'] }) }}">{{ user_client_order_detail[0].client_name ? user_client_order_detail[0].client_name : 'Zamówienia bez kontrahenta'}}</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">{{ user_client_order_detail[0].imie_nazwisko ? user_client_order_detail[0].imie_nazwisko : 'Zamówienia bez uzytkownika' }}</li>
                 </ol>
             </nav>
 
@@ -25,11 +26,19 @@
                 <div class="form">
                     <h3 class="header">
                         <strong>
+                            {% if user_exist %}
                             {{ title }} {{ user_exist[0].imie_nazwisko }}
+                            {% else %}
+                            Zamówienia bez uzytkownika
+                            {%  endif %}
                         </strong>
                     </h3>
                     <div>
-                        <form action="{{ path('analysis_user_order', {'id_client':  client_exist[0].id, 'id_user': user_exist[0].id_auth }) }}"
+                        <form action="{{ path('analysis_user_order',
+                            {
+                                'id_client': app.request.attributes.get('_route_params')['id_client'],
+                                'id_user': app.request.attributes.get('_route_params')['id_user']
+                            }) }}"
                               method="get">
                             <div class="row">
                                 <div class="col">
@@ -42,7 +51,14 @@
                                 <div class="col">
                                     <button class="btn btn-success" type="submit">Przeszukaj</button>
                                     <a class="btn btn-info" role="button"
-                                       href="{{ path('analysis_user_order', {'from': '', 'to': '', 'id_client':  client_exist[0].id, 'id_user': user_exist[0].id_auth }) }}">Resetuj</a>
+                                       href="{{ path('analysis_user_order',
+                                           {
+                                               'from': '',
+                                               'to': '',
+                                               'id_client': app.request.attributes.get('_route_params')['id_client'],
+                                               'id_user': app.request.attributes.get('_route_params')['id_user']
+                                           }
+                                       ) }}">Resetuj</a>
                                 </div>
                             </div>
                         </form>
@@ -72,14 +88,14 @@
                                 <td></td>
                                 <td>
                                     <a href="{{ path('analysis_order_list', {'id_order': order.id_ezamowienia}) }}">
-                                        {{ order.numer_zamowienia }}
+                                        {{ order.numer_zamowienia ? order.numer_zamowienia : 'Brak numeru zamówienia' }}
                                     </a>
 
                                 </td>
-                                <td>{{ order.data_zlozenia }} </td>
-                                <td>{{ order.data_realizacji }} </td>
-                                <td>{{ order.wartosc_netto }}</td>
-                                <td>{{ order.wartosc_brutto }}</td>
+                                <td>{{ order.data_zlozenia ? order.data_zlozenia : 'Brak daty zamówienia'  }} </td>
+                                <td>{{ order.data_realizacji ? order.data_realizacji : 'Brak daty realizacji'}} </td>
+                                <td>{{ order.wartosc_netto ? order.wartosc_netto : order.cena_netto_zp }}</td>
+                                <td>{{ order.wartosc_brutto ? order.wartosc_brutto : order.cena_brutto_zp}}</td>
                             </tr>
                         {% endfor %}
                         </tbody>
@@ -93,12 +109,6 @@
                 {% endif %}
             </div>
 
-        {% else %}
-            <h4>Brak użytkownika o podanym id u kontrahenta {{ client_exist[0].nazwa_kontrahenta }}</h4>
-        {% endif %}
-    {% else %}
-        <h4>Brak kontrahenta o podanym id</h4>
-    {% endif %}
 
 
 {% endblock %}

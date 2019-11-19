@@ -12,7 +12,6 @@ use Doctrine\DBAL\Connection;
  *
  * Zamówienia w grupach
  */
-
 class GroupOrder
 {
     /**
@@ -25,18 +24,19 @@ class GroupOrder
         $this->connection = $connection;
     }
 
-    public function getAll($id_group = null, $from = null, $to= null)
+    public function getAll($id_group = null, $from = null, $to = null)
     {
         $query = "
-                SELECT k.id_grupy,
-                       kg.nazwa_grupy,
-                       count(k.id_grupy) ilosc_zamowien_w_grupie,
-                       sum(z.wartosc_netto) wartosc_zamowien_netto,
-                       sum(z.wartosc_brutto) wartosc_zamowien_brutto
-                FROM kontrahenci k
-                         LEFT JOIN kontrahenci_grupy kg on k.id_grupy = kg.id_grupy
-                         LEFT JOIN zamowienia z on k.id_kontrahenta = z.id_kontrahenta
-                WHERE z.id_kontrahenta > 0
+            SELECT IFNULL(kg.id_grupy, -1)           id_grupy,
+                   IFNULL(kg.nazwa_grupy, 'Brak przypisanej grupy')                    nazwa_grupy,
+                   count(distinct zp.id_ezamowienia) ilosc_zamowien_w_grupie,
+                   sum(zp.cena_netto * zp.ilosc)     wartosc_zamowien_netto,
+                   sum(zp.cena_brutto * zp.ilosc)    wartosc_zamowien_brutto
+            FROM zamowienia_pozycje zp
+                     LEFT JOIN zamowienia z on zp.id_ezamowienia = z.id_ezamowienia
+                     LEFT JOIN kontrahenci k on z.id_kontrahenta = k.id_kontrahenta
+                     LEFT JOIN kontrahenci_grupy kg on k.id_grupy = kg.id_grupy
+            WHERE 0 = 0
         ";
         if ($id_group) {
             $query .= "AND kg.id_grupy = '" . $id_group . "'";
@@ -47,30 +47,39 @@ class GroupOrder
         if ($to) {
             $query .= " AND z.data_zlozenia <= CAST('" . $to . "' AS DATE)";
         }
-        $query .= " GROUP BY k.id_grupy ORDER BY wartosc_zamowien_netto DESC";
+        $query .= " 
+            GROUP BY kg.id_grupy
+            ORDER BY wartosc_zamowien_netto DESC;
+        ";
         dump($query);
         return $clientGroup = $this->connection->fetchAll($query);
     }
 
-    public function getGroup($id_group = null, $from = null, $to= null, $id_client = null)
+    public function getGroup($id_group = null, $from = null, $to = null, $id_client = null)
     {
         $query = "
             SELECT
                 z.id_kontrahenta id_kontrahenta,
-                k.nazwa_kontrahenta nazwa_kontrahenta,
+                IFNULL(k.nazwa_kontrahenta, 'Brak nazwy kontrahenta') nazwa_kontrahenta,
+                kg.id_grupy id_grupy,
                 kg.nazwa_grupy nazwa_grupy,
-                COUNT(z.id_kontrahenta) ilosc_zamowien,
-                SUM(z.wartosc_netto) wartosc_netto,
-                SUM(z.wartosc_brutto) wartosc_brutto
-            FROM zamowienia z
-            LEFT JOIN kontrahenci k on z.id_kontrahenta = k.id_kontrahenta
-            LEFT JOIN kontrahenci_grupy kg on k.id_grupy = kg.id_grupy
-            WHERE k.id_kontrahenta > 0
-
+                COUNT(distinct  zp.id_ezamowienia) ilosc_zamowien,
+                SUM(zp.cena_netto * zp.ilosc) wartosc_netto,
+                SUM(zp.cena_brutto * zp.ilosc) wartosc_brutto
+            FROM zamowienia_pozycje zp
+                    LEFT JOIN zamowienia z on z.id_ezamowienia = zp.id_ezamowienia
+                     LEFT JOIN kontrahenci k on z.id_kontrahenta = k.id_kontrahenta
+                     LEFT JOIN kontrahenci_grupy kg on k.id_grupy = kg.id_grupy
         ";
-        if ($id_group) {
-            $query .= "AND kg.id_grupy = '" . $id_group . "'";
-        }
+        if ($id_group == -1) {
+            $query .= "
+                WHERE k.id_kontrahenta is null  AND kg.id_grupy is null
+                ";
+        } else {
+        $query .= "
+                WHERE kg.id_grupy = '" . $id_group . "'";
+    }
+
         if ($id_client) {
             $query .= "AND k.id_kontrahenta = '" . $id_client . "'";
         }
@@ -81,7 +90,7 @@ class GroupOrder
             $query .= " AND z.data_zlozenia <= CAST('" . $to . "' AS DATE)";
         }
         $query .= " GROUP BY id_kontrahenta";
-//dump($query);
-        return  $this->connection->fetchAll($query);
+        dump($query);
+        return $this->connection->fetchAll($query);
     }
 }

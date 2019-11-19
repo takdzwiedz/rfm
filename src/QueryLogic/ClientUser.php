@@ -86,61 +86,33 @@ class ClientUser
     public function getUserClientOrder($id_client, $id_user, $from = null, $to = null)
     {
         $query = "
-            SELECT 
-                id_ezamowienia,
-                id_zamowienia,
-               id_kontrahenta,
-               numer_zamowienia,
-               data_zlozenia,
-               godzina_zlozenia,
-               data_realizacji,
-               priorytet,
-               auto_rezerwacja,
-               wartosc_brutto,
-               wartosc_netto,
-               stan,
-               status_zamowienia,
-               tryb,
-               narzut,
-               czy_powiadom,
-               id_auth,
-               status_wfmag,
-               id_wfmag_user,
-               id_firmy,
-               zam_wartosc_rabat,
-               zam_znak_rabat,
-               status_ecommerce,
-               rabat_kontrahenta,
-               id_magazynu,
-               session_id,
-               id_platnosci,
-               czy_faktura,
-               uwagi,
-               uwagi_klienta,
-               uwagi_wysylka,
-               rodzaj_zamowienia,
-               id_auth_akceptacja,
-               id_adresu,
-               id_kontaktu,
-               token,
-               data_akceptacji,
-               id_jednostki,
-               id_dzialu,
-               id_dane_faktury,
-               numer_wfmag,
-               id_zaakceptowal,
-               id_pakietu
-        FROM zamowienia
-        WHERE id_kontrahenta = '" . $id_client . "'
-        AND id_auth = '" . $id_user . "'
+            SELECT *,
+               zp.id_ezamowienia id_ezamowienia,
+               SUM(zp.ilosc * zp.cena_netto) cena_netto_zp,
+               SUM(zp.ilosc * zp.cena_brutto) cena_brutto_zp
+            FROM computer_test.zamowienia_pozycje zp
+            LEFT JOIN zamowienia z on zp.id_ezamowienia = z.id_ezamowienia
         ";
+        if ($id_client == -1 && $id_user == -1) {
+            $query .= "
+                WHERE z.id_kontrahenta is null
+            ";
+        } else {
+            $query .= "
+                WHERE id_kontrahenta = '" . $id_client . "'
+                AND id_auth = '" . $id_user . "'
+            ";
+        }
+            $query .= "
+               GROUP BY zp.id_ezamowienia
+            ";
         if ($from) {
             $query .= " AND data_zlozenia >= CAST('" . $from . "' AS DATE)";
         }
         if ($to) {
             $query .= " AND data_zlozenia <= CAST('" . $to . "' AS DATE)";
         }
-
+dump($query);
         return $this->connection->fetchAll($query);
     }
 

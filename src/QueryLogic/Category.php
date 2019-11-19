@@ -101,7 +101,7 @@ class Category
                      LEFT JOIN ekategorie e on a.id_ekategorii = e.id_kategorii
                      LEFT JOIN zamowienia z on zp.id_ezamowienia = z.id_ezamowienia
                      LEFT JOIN (SELECT id_kategorii, id_ojca, nazwa_kategorii FROM ekategorie) s on e.id_ojca = s.id_kategorii
-            WHERE z.id_ezamowienia >= 0
+            WHERE a.id_artykulu > 0
             
         ";
 

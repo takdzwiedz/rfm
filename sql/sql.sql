@@ -16,7 +16,8 @@ BEGIN
     SET crt_date=start_date;
     WHILE crt_date < end_date DO
             INSERT INTO kalendarz VALUES(crt_date);
-            SET crt_date = ADDDATE(crt_date, INTERVAL 1 MONTH);
+#             SET crt_date = ADDDATE(crt_date, INTERVAL 1 month);
+            SET crt_date = ADDDATE(crt_date, INTERVAL 1 day);
         END WHILE;
 END |
 DELIMITER ;

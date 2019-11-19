@@ -6,6 +6,7 @@ use App\QueryLogic\ProductSale;
 use App\QueryLogic\ProductSubcategory;
 use App\QueryLogic\Subcategory;
 use App\Service\ChartRender;
+
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -53,17 +54,51 @@ class SubcategoryController extends AbstractController
     {
         $from = htmlspecialchars($request->query->get("from"));
         $to = htmlspecialchars($request->query->get("to"));
+        $unit = htmlspecialchars($request->query->get("unit"));
 
-        $productSaleDetail = $productSale->getData($id_product, $from, $to);
+        $productSaleDetail = $productSale->getData($id_product);
 
-        $productSaleData = $productSale->getSaleByMonth($id_product);
+        $date = new \DateTime();
+
+        $toDefault =  $date->format("Y-m-d");
+        $fromDefault = $date->modify("-12 months +1 day")->format("Y-m-d");
+
+        $unitDefault = "month";
+
+        $productSaleData = $productSale->getSaleByMonth(
+            $id_product,
+            $from ? $from : $fromDefault,
+            $to ? $to : $toDefault,
+            $unit ? $unit : null
+        );
+
+        if ($unit == 'day') {
+            $period = "Dzień";
+        } elseif ($unit == 'month') {
+            $period = "Rok";
+        } else {
+            $period = 'Miesiąc';
+        }
 
         $arr = [
-            ['Miesiąc', 'Sprzedaż']
+            [$period, 'Sprzedaż']
         ];
 
         foreach ($productSaleData as $item) {
-            $arr[] = [$item['month'].'/'.$item['year'], floatval($item['sum'])];
+
+            if ($unit == 'day') {
+                $arr[] = [$item['day'].'/'.$item['month'].'/'.$item['year'], floatval($item['sum'])];
+            } elseif ($unit == 'month') {
+                $arr[] = [$item['year'], floatval($item['sum'])];
+            } else {
+                $arr[] = [$item['month'].'/'.$item['year'], floatval($item['sum'])];
+            }
+        }
+
+
+        $controlSum = 0;
+        foreach ($productSaleData as $item) {
+            $controlSum += floatval($item['sum']);
         }
 
         $columnChart = $chartRender->columnChart($arr, 'Sprzedaż produktu');
@@ -72,11 +107,16 @@ class SubcategoryController extends AbstractController
         $data = [
             'title' => 'Dane sprzedażowe artykułu',
             'id_product' => $id_product,
+            'control_sum' => $controlSum,
             'product_sale_detail' => $productSaleDetail,
             'product_sale_data' => $productSaleData,
             'from' => $from,
+            'from_default' => $fromDefault,
             'to' => $to,
+            'to_default' => $toDefault,
             'column_chart' => $columnChart,
+            'unit' => $unit,
+            'unit_default' => $unitDefault,
         ];
         dump($data);
         return $this->render("product/product-sale.html.twig", $data);

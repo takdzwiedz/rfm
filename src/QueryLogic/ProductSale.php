@@ -25,15 +25,11 @@ class ProductSale
      * @param null $to
      * @return mixed[]
      */
-    public function getData($id_product, $from = null, $to = null)
+    public function getData($id_product)
     {
         $query = "
             SELECT
                 a.nazwa_artykulu product_name,
-                SUM(ilosc) quntity,
-                COUNT(id_ezamowienia_pozycje) number_of_orders,
-                SUM(cena_netto *ilosc) net_sum,
-                SUM(cena_brutto * ilosc) gross_sum,
                 a.id_ekategorii id_category,
                 e.nazwa_kategorii category_name, 
                 e.id_ojca id_parent,
@@ -49,13 +45,8 @@ class ProductSale
                  ) s on e.id_ojca = s.id_kategorii
             WHERE zp.id_artykulu = '" . $id_product . "'
                 ";
-        if ($from) {
-            $query .= " AND z.data_zlozenia >= CAST('" . $from . "' AS DATE)";
-        }
-        if ($to) {
-            $query .= " AND z.data_zlozenia <= CAST('" . $to . "' AS DATE)";
-        }
 
+        $query .= " GROUP BY product_name";
 
         dump($query);
         return $orderGroupOrders = $this->connection->fetchAll($query);
@@ -87,22 +78,22 @@ class ProductSale
     }
 
 
-    public function getSaleByMonth($id_product = null)
+    public function getSaleByMonth($id_product = null, $from = null, $to = null, $unit = null)
     {
         $query= "
             
             SELECT YEAR(k.miesiace)  as                                    year,
                    MONTH(k.miesiace) AS                                    month,
+                   DAY(k.miesiace) AS                                      day,
                    IFNULL(YEAR(data_zlozenia), YEAR(k.miesiace))           order_year,
                    IFNULL(MONTH(data_zlozenia), MONTH(k.miesiace))         order_month,
                    IFNULL(MONTHNAME(data_zlozenia), MONTHNAME(k.miesiace)) monthname,
+                   IFNULL(DAY(data_zlozenia), DAY(k.miesiace))             order_day,
                    IFNULL(SUM(zp.cena_netto * ilosc), 0)                   sum
             FROM kalendarz k
-                     LEFT OUTER JOIN zamowienia z
-                                     on MONTH(z.data_zlozenia) = MONTH(k.miesiace) AND YEAR(z.data_zlozenia) = YEAR(k.miesiace)
-                     LEFT OUTER JOIN zamowienia_pozycje zp on z.id_ezamowienia = zp.id_ezamowienia 
-                             
-
+            LEFT OUTER JOIN zamowienia z
+                on MONTH(z.data_zlozenia) = MONTH(k.miesiace) AND YEAR(z.data_zlozenia) = YEAR(k.miesiace) AND  DAY(z.data_zlozenia) = DAY(k.miesiace)
+            LEFT OUTER JOIN zamowienia_pozycje zp on z.id_ezamowienia = zp.id_ezamowienia 
         ";
         if ($id_product) {
             $query .= "
@@ -110,11 +101,52 @@ class ProductSale
             ";
         }
         $query .= "
-            WHERE k.miesiace >= DATE_SUB(now(), INTERVAL 12 MONTH)
-                  AND k.miesiace <= now()
+                  WHERE 0 = 0
+        ";
+
+        if ($from) {
+            $query .= " AND CAST(k.miesiace AS DATE) >= CAST('" . $from . "' AS DATE)";
+        }
+        if ($to) {
+            $query .= " AND CAST(k.miesiace AS DATE) <= CAST('" . $to . "' AS DATE)";
+        }
+
+        switch ($unit) {
+
+            case "day":
+                $query .= "
+                GROUP BY DAY(k.miesiace), MONTH(k.miesiace), YEAR(k.miesiace)
+                ORDER BY YEAR(k.miesiace), MONTH(k.miesiace), DAY(k.miesiace);
+        ";
+                break;
+
+            case "month":
+                $query .= "
                 GROUP BY MONTH(k.miesiace), YEAR(k.miesiace)
                 ORDER BY YEAR(k.miesiace), MONTH(k.miesiace);
         ";
+                break;
+
+            case "year":
+                $query .= "
+                GROUP BY YEAR(k.miesiace)
+                ORDER BY YEAR(k.miesiace);
+        ";
+            break;
+            default:
+                $query .= "
+                GROUP BY MONTH(k.miesiace), YEAR(k.miesiace)
+                ORDER BY YEAR(k.miesiace), MONTH(k.miesiace);
+        ";
+
+        }
+
+
+
+
+
+
+
         dump($query);
         return $orderGroupOrders = $this->connection->fetchAll($query);
     }

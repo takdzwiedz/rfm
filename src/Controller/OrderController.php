@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\QueryLogic\Order;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 
 class OrderController extends AbstractController
@@ -22,22 +23,26 @@ class OrderController extends AbstractController
     /**
      * @Route("/order-list/{id_order<\d+>}", name="analysis_order_list")
      */
-    public function order($id_order, Order $order)
+    public function order($id_order, Order $order, Session $session)
     {
-        $orderList = $order->getData($id_order);
+        if ($session->get('logged') == true) {
 
-        $orderDetails = $order->getOrderDetail($id_order);
+            $orderList = $order->getData($id_order);
+            $orderDetails = $order->getOrderDetail($id_order);
+            $data = [
 
-        $data = [
-            'title' => 'Zamówienie',
-            'order_number' => $id_order,
-            'order' => $orderList,
-            'order_details' => $orderDetails
-        ];
+                'order_number' => $id_order,
+                'order' => $orderList,
+                'order_details' => $orderDetails,
+                'title' => 'Zamówienie',
+                'user' => $session->get('user'),
+            ];
 
-        dump($data);
-        return $this->render('order/order.html.twig', $data);
+            dump($data);
+            return $this->render('order/order.html.twig', $data);
+
+        } else {
+            return $this->render('security/index.html.twig');
+        }
     }
-
-
 }

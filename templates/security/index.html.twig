@@ -1,0 +1,12 @@
+{% block title %} {% endblock %}
+
+{% block body %}
+<div class="">
+    <form action="{{ path('analysis_security')
+     }}" method="post">
+        <input name="username" placeholder="użytkownik">
+        <input name="password" placeholder="hasło" type="password" >
+        <button type="submit">Zaloguj</button>
+    </form>
+</div>
+{% endblock %}

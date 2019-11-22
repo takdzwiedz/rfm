@@ -11,6 +11,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Annotation\Route;
 
 class GroupController extends AbstractController
@@ -33,56 +35,63 @@ class GroupController extends AbstractController
      * @param OrderGroup $orderGroup
      * @return Response
      */
-    public function groupOrderAll(Request $request, ChartRender $chartRender, GroupOrder $groupOrder, OrderGroup $orderGroup
+    public function groupOrderAll(Request $request, ChartRender $chartRender, GroupOrder $groupOrder, OrderGroup $orderGroup, Session $session
     )
     {
-        $title = "Zamówienia w grupach";
-        $from = htmlspecialchars($request->query->get("from"));
-        $to = htmlspecialchars($request->query->get("to"));
-        $chart = [];
+        if ($session->get('logged') == true) {
 
-        $clientGroup = $groupOrder->getAll(null, $from, $to);
+            $title = "Zamówienia w grupach";
+            $from = htmlspecialchars($request->query->get("from"));
+            $to = htmlspecialchars($request->query->get("to"));
+            $chart = [];
 
-        // Suma wartości zamówień netto
+            $clientGroup = $groupOrder->getAll(null, $from, $to);
 
-        $sumNet = 0;
-        foreach ($clientGroup as $item) {
-            $sumNet += $item["wartosc_zamowien_netto"];
-        }
+            // Suma wartości zamówień netto
 
-        // Zapełenie danych do BarChart
-
-        if ($clientGroup) {
-            $barChartData = [
-                ['Nazwa grupy', 'Ilość kontrahentów w grupie', 'Wartość zamówień netto'],
-            ];
-            foreach ($clientGroup as $client) {
-                $barChartData[] = [
-                    $client['nazwa_grupy'],
-                    floatval($client['ilosc_zamowien_w_grupie']),
-                    floatval($client['wartosc_zamowien_netto'])
-                ];
+            $sumNet = 0;
+            foreach ($clientGroup as $item) {
+                $sumNet += $item["wartosc_zamowien_netto"];
             }
-            $chart = $chartRender->barChart(
-                $barChartData,
-                'Ilość Kontrhentów w grupie',
-                'Łączna wartość zamówień netto',
-                'Łączna wartośc zamówień netto',
-                'Ilośc kontrahentów w grupie'
-            );
-            $chart->getOptions()->setColors(['green', 'orange', 'yellow']);
+
+            // Zapełenie danych do BarChart
+
+            if ($clientGroup) {
+                $barChartData = [
+                    ['Nazwa grupy', 'Ilość kontrahentów w grupie', 'Wartość zamówień netto'],
+                ];
+                foreach ($clientGroup as $client) {
+                    $barChartData[] = [
+                        $client['nazwa_grupy'],
+                        floatval($client['ilosc_zamowien_w_grupie']),
+                        floatval($client['wartosc_zamowien_netto'])
+                    ];
+                }
+                $chart = $chartRender->barChart(
+                    $barChartData,
+                    'Ilość Kontrhentów w grupie',
+                    'Łączna wartość zamówień netto',
+                    'Łączna wartośc zamówień netto',
+                    'Ilośc kontrahentów w grupie'
+                );
+                $chart->getOptions()->setColors(['green', 'orange', 'yellow']);
+            }
+            $data = [
+                'client_group' => $clientGroup,
+                'bar_chart' => $chart,
+                'from' => $from,
+                'to' => $to,
+                'sum_net' => $sumNet,
+                'title' => $title,
+                'user' => $session->get('user'),
+                'order_group' => $orderGroup
+            ];
+            dump($data);
+            return $this->render('group/group-order-all.html.twig', $data);
+
+        } else {
+            return $this->render('security/index.html.twig');
         }
-        $data = [
-            'client_group' => $clientGroup,
-            'bar_chart' => $chart,
-            'title' => $title,
-            'from' => $from,
-            'to' => $to,
-            'sum_net' => $sumNet,
-            'order_group' => $orderGroup
-        ];
-        dump($data);
-        return $this->render('group/group-order-all.html.twig', $data);
     }
 
     /**
@@ -96,55 +105,60 @@ class GroupController extends AbstractController
      */
 
     public function GroupOrder(
-        $id_group, Request $request, ChartRender $chartRender, ClientGroup $clientGroup, GroupOrder $groupOrder, Group $group
+        $id_group, Request $request, ChartRender $chartRender, ClientGroup $clientGroup, GroupOrder $groupOrder, Group $group, Session $session
     )
     {
-        $titleOrderGroup = "Zamówienia kontrahentów";
-        $from = htmlspecialchars($request->query->get("from"));
-        $to = htmlspecialchars($request->query->get("to"));
-        $groupName = '';
-        $chart = [];
-        $pieChart = [];
-        $columnChart = [];
+        if ($session->get('logged') == true) {
 
-        $orderGroup = $groupOrder->getGroup($id_group, $from, $to);
+            $titleOrderGroup = "Zamówienia kontrahentów";
+            $from = htmlspecialchars($request->query->get("from"));
+            $to = htmlspecialchars($request->query->get("to"));
+            $groupName = '';
+            $chart = [];
+            $pieChart = [];
+            $columnChart = [];
 
-        $group = $group->getData($id_group);
+            $orderGroup = $groupOrder->getGroup($id_group, $from, $to);
 
-        if ($group) {
-            $groupName = $group[0]['nazwa_grupy'];
-        }
+            $group = $group->getData($id_group);
 
-
-        // Zapełnianie danych do ColumnChart
-        if ($id_group) {
-            $columnChartData = [
-                ['Nazwa kontrahenta', 'Wartość zamówień netto']
-            ];
-            foreach ($orderGroup as $client) {
-                $columnChartData[] = [
-                    $client['nazwa_kontrahenta'],
-                    floatval($client['wartosc_netto'])
-                ];
+            if ($group) {
+                $groupName = $group[0]['nazwa_grupy'];
             }
-            $columnChart = $chartRender->columnChart($columnChartData, 'Wartość zamówień kontrhentów za wybrany okres');
+
+
+            // Zapełnianie danych do ColumnChart
+            if ($id_group) {
+                $columnChartData = [
+                    ['Nazwa kontrahenta', 'Wartość zamówień netto']
+                ];
+                foreach ($orderGroup as $client) {
+                    $columnChartData[] = [
+                        $client['nazwa_kontrahenta'],
+                        floatval($client['wartosc_netto'])
+                    ];
+                }
+                $columnChart = $chartRender->columnChart($columnChartData, 'Wartość zamówień kontrhentów za wybrany okres');
+            }
+
+            $data = [
+                'client_group' => $clientGroup,
+                'bar_chart' => $chart,
+                'pie_chart2' => $pieChart,
+                'column_chart' => $columnChart,
+                'title' => $titleOrderGroup,
+                'from' => $from,
+                'to' => $to,
+                'id_group' => $id_group,
+                'group' => $group,
+                'group_name' => $groupName,
+                'order_group' => $orderGroup,
+                'user' => $session->get('user'),
+            ];
+            dump($data);
+            return $this->render('group/group-order.html.twig', $data);
+        } else {
+            return $this->render('security/index.html.twig');
         }
-
-        $data = [
-            'client_group' => $clientGroup,
-            'bar_chart' => $chart,
-            'pie_chart2' => $pieChart,
-            'column_chart' => $columnChart,
-            'title' => $titleOrderGroup,
-            'from' => $from,
-            'to' => $to,
-            'id_group' => $id_group,
-            'group' => $group,
-            'group_name' => $groupName,
-            'order_group' => $orderGroup
-        ];
-        dump($data);
-
-        return $this->render('group/group-order.html.twig', $data);
     }
 }

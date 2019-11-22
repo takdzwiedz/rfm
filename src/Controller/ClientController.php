@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\QueryLogic\Client;
 use App\QueryLogic\ClientOrder;
 use App\QueryLogic\GroupClient;
 use App\QueryLogic\GroupOrder;
@@ -33,11 +34,14 @@ class ClientController extends AbstractController
      * @param GroupOrder $groupOrder
      * @return Response
      */
-    public function clientOrder($id_client, ClientOrder $clientOrder, GroupOrder $groupOrder, Request $request, ChartRender $chartRender)
+    public function clientOrder($id_client, ClientOrder $clientOrder, GroupOrder $groupOrder, Request $request, ChartRender $chartRender, Client $clientDetail)
     {
 
         $from = htmlspecialchars($request->query->get("from"));
         $to = htmlspecialchars($request->query->get("to"));
+
+        $clientDetail = $clientDetail->getData(null, $id_client);
+
         if ($clientOrder->getData($id_client)) {
 
             $client = $clientOrder->getData($id_client)[0];
@@ -75,6 +79,7 @@ class ClientController extends AbstractController
             'client_name' => $clientName,
             'id_group' => $idGroup,
             'group_name' => $groupName,
+            'client_detail' => $clientDetail,
             'client_order' => $clientOrder,
             'group_order' => $groupOrder,
             'from' => $from,

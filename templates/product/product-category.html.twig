@@ -64,7 +64,11 @@
                     <tr>
                         <td></td>
                         <td>
-                            <a href="{{ path('analysis_category_product', {'id_parent': row.id_parent ? row.id_parent : 0 , 'id_category': row.id_category ? row.id_category : 0 }) }}"
+                            <a href="{{ path('analysis_category_product',
+                                {
+                                    'id_parent': row.id_parent ? row.id_parent : 0 ,
+                                    'id_category': row.id_category ? row.id_category : 0
+                                }) }}"
                             > {{ row.category_name }}</a>
                         </td>
                         <td>{{ row.quantity }}</td>

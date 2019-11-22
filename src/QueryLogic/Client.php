@@ -32,6 +32,7 @@ class Client
             "
             SELECT 
                 k.id id,
+                kg.id_grupy id_grupy,
                 kg.nazwa_grupy nazwa_grupy,
                 k.nazwa_skrocona nazwa_skrocona,
                 k.nip nip,

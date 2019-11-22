@@ -9,7 +9,78 @@
 {% endblock %}
 
 {% block body %}
-    {% if client_order %}
+    {% if (client_detail and client_order is empty) or (client_detail and client_order) %}
+
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{{ path('analysis_group_order_all') }}">Kontrahenci</a></li>
+                <li class="breadcrumb-item"><a href="{{ path('analysis_group_order', {'id_group': client_detail ? client_detail[0].id_grupy : -1 } ) }}">{{ client_detail ? client_detail[0].nazwa_grupy : 'Zamówienia bez grupy' }}</a></li>
+                <li class="breadcrumb-item active" aria-current="page">{{ client_detail ? client_detail[0].nazwa_kontrahenta : 'Zamówienia bez kontrahenta' }}</li>
+            </ol>
+        </nav>
+
+
+        <div class="form">
+            <h3 class="header"><strong>{{ title }} {{ client_name }}</strong></a>
+            </h3>
+            <div>
+                <form action="{{ path('analysis_client_order', {'id_client': group_order ? group_order[0]["id_kontrahenta"] : -1}) }}"
+                      method="get">
+                    <div class="row">
+                        <div class="col">
+                            <input class="form-control" type="date" name="from" value="{{ from ? from : '' }}">
+                        </div>
+                        <div class="col">
+                            <input class="form-control" type="date" name="to" value="{{ to ? to : '' }}">
+                        </div>
+                        <div class="col">
+                            <button class="btn btn-success" type="submit">Przeszukaj</button>
+                            <a class="btn btn-info" role="button"
+                               href="{{ path('analysis_client_order', {'from': '', 'to': '', 'id_client': group_order ? group_order[0]["id_kontrahenta"] : -1}) }}">Resetuj</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="art-container">
+
+            {% if client_order %}
+                <div class="chart">
+                    <div id="div_pie_chart"></div>
+                </div>
+                <table id="example" class="table table-striped table-bordered" style="width:100%">
+                    <thead>
+                    <tr>
+                        <th>Lp.</th>
+                        <th>Nazwa użytkownika</th>
+                        <th>Ilość zamówień</th>
+                        <th>Wartość zamówień netto</th>
+                        <th>Wartość zamówień brutto</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for user in client_order %}
+                        <tr>
+                            <td></td>
+                            <td><a href="{{ path('analysis_user_order', {'id_client': app.request.attributes.get('_route_params')['id_client'], 'id_user': user.id_user ? user.id_user : -1}) }}">{{ user.username_name ? user.username_name : 'Zamówienia bez użytkownika'}}</a></td>
+                            <td>{{ user.order_quantity }} </td>
+                            <td>{{ user.net_sum }}</td>
+                            <td>{{ user.gross_sum }}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                    <tfoot>
+                    <tr>
+                        <th colspan="4" style="text-align:right">Łącznie:</th>
+                        <th></th>
+                    </tr>
+                    </tfoot>
+                </table>
+            {% else %}
+                <h4>Brak zamówień kontrahenta w wybranym okresie</h4>
+            {% endif %}
+        </div>
+    {% elseif client_detail is empty and client_order %}
 
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
@@ -43,9 +114,8 @@
             </div>
         </div>
         <div class="art-container">
-            {% if client_order is empty %}
-                <h4>Brak zamówień kontrahenta w wybranym okresie</h4>
-            {% else %}
+
+            {% if client_order %}
                 <div class="chart">
                     <div id="div_pie_chart"></div>
                 </div>
@@ -77,9 +147,10 @@
                     </tr>
                     </tfoot>
                 </table>
+            {% else %}
+                <h4>Brak zamówień kontrahenta w wybranym okresie</h4>
             {% endif %}
         </div>
-
 
 
     {% else %}

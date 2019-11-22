@@ -29,7 +29,7 @@ class CategoryController extends AbstractController
      * @param Category $category
      * @return Response
      */
-    public function productCategoryList(Request $request, $id_parent, $id_category, Category $category)
+    public function productCategoryList(Request $request, $id_parent, $id_category = 0, Category $category)
     {
         $from = htmlspecialchars($request->query->get("from"));
         $to = htmlspecialchars($request->query->get("to"));

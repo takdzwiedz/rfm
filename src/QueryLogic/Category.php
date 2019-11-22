@@ -24,13 +24,13 @@ class Category
     public function getData()
     {
         $query = "
-            SELECT id_kategorii,
+            SELECT e.id_kategorii id_kat,
                    update_person_id,
                    create_person_id,
                    publication_state_id,
                    p_catalog_id,
-                   id_ojca,
-                   nazwa_kategorii,
+                   e.id_ojca,
+                   e.nazwa_kategorii,
                    publication_date_from,
                    publication_date_to,
                    publication_always,
@@ -56,10 +56,26 @@ class Category
                    id_kategorii_wfmag,
                    czy_widoczna,
                    zdjecie,
-                   opis
-            FROM ekategorie
-            WHERE id_ojca = 0
+                   update_person_id,
+                   create_person_id,
+                   publication_state_id,
+                   p_catalog_id,
+                   e.id_ojca,
+                   e.nazwa_kategorii,
+                   ifnull(s.id_kategorii, 0) id_category,
+                   ifnull(s.id_ojca, 0) id_parent,
+                   ifnull(s.nazwa_kategorii, e.nazwa_kategorii) category_name
+            FROM ekategorie e
+            LEFT JOIN (
+                SELECT id_kategorii, id_ojca, nazwa_kategorii
+                FROM ekategorie
+            ) s on s.id_ojca = e.id_kategorii
+            WHERE e.id_ojca = 0
+            GROUP BY e.id_kategorii
+
         ";
+
+        dump($query);
         return $orderGroupOrders = $this->connection->fetchAll($query);
     }
 

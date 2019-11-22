@@ -74,10 +74,10 @@ class SubcategoryController extends AbstractController
 
         if ($unit == 'day') {
             $period = "Dzień";
-        } elseif ($unit == 'month') {
-            $period = "Rok";
-        } else {
+        } elseif ($unit == 'month' or $unit == null) {
             $period = 'Miesiąc';
+        } else {
+            $period = "Rok";
         }
 
         $arr = [
@@ -88,10 +88,10 @@ class SubcategoryController extends AbstractController
 
             if ($unit == 'day') {
                 $arr[] = [$item['day'].'/'.$item['month'].'/'.$item['year'], floatval($item['sum'])];
-            } elseif ($unit == 'month') {
-                $arr[] = [$item['year'], floatval($item['sum'])];
-            } else {
+            } elseif ($unit == 'month' or $unit == null) {
                 $arr[] = [$item['month'].'/'.$item['year'], floatval($item['sum'])];
+            } else {
+                $arr[] = [$item['year'], floatval($item['sum'])];
             }
         }
 

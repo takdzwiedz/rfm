@@ -54,7 +54,8 @@ class Subcategory
                    SUM(zp.ilosc * zp.cena_netto)  net_sum_op,
                    SUM(zp.ilosc * zp.cena_brutto) gross_sum
             FROM zamowienia_pozycje zp
-                     LEFT JOIN artykuly a on zp.id_artykulu = a.id_artykulu
+            LEFT JOIN artykuly a on zp.id_artykulu = a.id_artykulu
+            LEFT JOIN zamowienia z on zp.id_ezamowienia = z.id_ezamowienia
             WHERE a.id_ekategorii = '" . $id_subcategory . "'           
             ";
 

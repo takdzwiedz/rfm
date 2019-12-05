@@ -82,9 +82,11 @@ class ProductSale
     {
         $query= "
             
-            SELECT YEAR(k.miesiace)  as                                    year,
-                   MONTH(k.miesiace) AS                                    month,
-                   DAY(k.miesiace) AS                                      day,
+            SELECT YEAR(k.miesiace)    as                                  year,
+                   QUARTER(k.miesiace) as                                  quarter,
+                   MONTH(k.miesiace)   AS                                  month,
+                   WEEK(k.miesiace)    AS                                  week,
+                   DAY(k.miesiace)     AS                                  day,
                    IFNULL(YEAR(data_zlozenia), YEAR(k.miesiace))           order_year,
                    IFNULL(MONTH(data_zlozenia), MONTH(k.miesiace))         order_month,
                    IFNULL(MONTHNAME(data_zlozenia), MONTHNAME(k.miesiace)) monthname,
@@ -92,7 +94,11 @@ class ProductSale
                    IFNULL(SUM(zp.cena_netto * ilosc), 0)                   sum
             FROM kalendarz k
             LEFT OUTER JOIN zamowienia z
-                on MONTH(z.data_zlozenia) = MONTH(k.miesiace) AND YEAR(z.data_zlozenia) = YEAR(k.miesiace) AND  DAY(z.data_zlozenia) = DAY(k.miesiace)
+                on MONTH(z.data_zlozenia) = MONTH(k.miesiace) 
+                             AND QUARTER(z.data_zlozenia) = QUARTER(z.data_zlozenia)
+                             AND YEAR(z.data_zlozenia) = YEAR(k.miesiace)
+                             AND WEEK(z.data_zlozenia) = WEEK(k.miesiace)
+                             AND DAY(z.data_zlozenia) = DAY(k.miesiace)
             LEFT OUTER JOIN zamowienia_pozycje zp on z.id_ezamowienia = zp.id_ezamowienia 
         ";
         if ($id_product) {
@@ -120,10 +126,24 @@ class ProductSale
         ";
                 break;
 
+            case "week":
+                $query .= "
+                GROUP BY WEEK(k.miesiace), MONTH(k.miesiace), YEAR(k.miesiace)
+                ORDER BY YEAR(k.miesiace), MONTH(k.miesiace), WEEK(k.miesiace);
+        ";
+                break;
+
             case "month":
                 $query .= "
                 GROUP BY MONTH(k.miesiace), YEAR(k.miesiace)
                 ORDER BY YEAR(k.miesiace), MONTH(k.miesiace);
+        ";
+                break;
+
+            case "quarter":
+                $query .= "
+                GROUP BY QUARTER(k.miesiace), YEAR(k.miesiace)
+                ORDER BY YEAR(k.miesiace), QUARTER(k.miesiace);
         ";
                 break;
 
@@ -138,13 +158,7 @@ class ProductSale
                 GROUP BY MONTH(k.miesiace), YEAR(k.miesiace)
                 ORDER BY YEAR(k.miesiace), MONTH(k.miesiace);
         ";
-
         }
-
-
-
-
-
 
 
         dump($query);

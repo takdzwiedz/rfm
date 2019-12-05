@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\QueryLogic\Product;
 use App\QueryLogic\ProductSale;
 use App\QueryLogic\ProductSubcategory;
 use App\QueryLogic\Subcategory;
@@ -52,29 +53,61 @@ class SubcategoryController extends AbstractController
     /**
      * @Route("/product-sale/{id_product}", name="analysis_product_sale")
      */
-    public function productSale(Request $request, $id_product, ProductSale $productSale, ChartRender $chartRender, Session $session)
+    public function productSale(Request $request, $id_product, ProductSale $productSale, Product $product, ChartRender $chartRender, Session $session)
     {
         if ($session->get('logged') == true) {
 
             $from = htmlspecialchars($request->query->get("from"));
             $to = htmlspecialchars($request->query->get("to"));
-            $unit = htmlspecialchars($request->query->get("unit"));
+            $unit = $request->query->get("unit") ? htmlspecialchars($request->query->get("unit")) : 'month';
             $productSaleDetail = $productSale->getData($id_product);
             $date = new \DateTime();
             $toDefault = $date->format("Y-m-d");
-            $fromDefault = $date->modify("-12 months +1 day")->format("Y-m-d");
+            $fromDefault = $date->modify("-12 months")->format("Y-m-d");
+            $units = [
+                [
+                    'unit' => 'year',
+                    'unit_name' => 'roczne'
+                ],
+                [
+                    'unit' => 'quarter',
+                    'unit_name' => 'kwartalnie'
+                ],
+                [
+                    'unit' => 'month',
+                    'unit_name' => 'miesięczne'
+                ],
+                [
+                    'unit' => 'week',
+                    'unit_name' => 'tygodniowo'
+                ],
+                [
+                    'unit' => 'day',
+                    'unit_name' => 'dzienne'
+                ],
+            ];
             $unitDefault = "month";
+            $productDetail = $product->search($id_product);
+            $productOrderList = $product->productOrderDetail(
+                $id_product,
+                $from ? $from : $fromDefault,
+                $to ? $to : $toDefault
+            );
             $productSaleData = $productSale->getSaleByMonth(
                 $id_product,
                 $from ? $from : $fromDefault,
                 $to ? $to : $toDefault,
-                $unit ? $unit : null
+                $unit ? $unit : 'month'
             );
 
             if ($unit == 'day') {
                 $period = "Dzień";
+            } elseif ($unit == 'week') {
+                $period = 'Tydzień';
             } elseif ($unit == 'month' or $unit == null) {
                 $period = 'Miesiąc';
+            } elseif ($unit == 'quarter') {
+                $period = 'Kwartał';
             } else {
                 $period = "Rok";
             }
@@ -87,8 +120,12 @@ class SubcategoryController extends AbstractController
 
                 if ($unit == 'day') {
                     $arr[] = [$item['day'] . '/' . $item['month'] . '/' . $item['year'], floatval($item['sum'])];
+                } elseif ($unit == 'week') {
+                    $arr[] = [$item['week'] . '/' . $item['year'], floatval($item['sum'])];
                 } elseif ($unit == 'month' or $unit == null) {
                     $arr[] = [$item['month'] . '/' . $item['year'], floatval($item['sum'])];
+                } elseif ($unit == 'quarter') {
+                    $arr[] = [$item['quarter'] . '/' . $item['year'], floatval($item['sum'])];
                 } else {
                     $arr[] = [$item['year'], floatval($item['sum'])];
                 }
@@ -106,14 +143,15 @@ class SubcategoryController extends AbstractController
                 'control_sum' => $controlSum,
                 'column_chart' => $columnChart,
                 'from' => $from,
-                'from_default' => $fromDefault,
                 'id_product' => $id_product,
+                'product' => $productDetail,
+                'product_order_list' => $productOrderList,
                 'product_sale_detail' => $productSaleDetail,
                 'product_sale_data' => $productSaleData,
                 'title' => 'Dane sprzedażowe artykułu',
                 'to' => $to,
-                'to_default' => $toDefault,
                 'unit' => $unit,
+                'units' => $units,
                 'unit_default' => $unitDefault,
                 'user' => $session->get('user'),
             ];

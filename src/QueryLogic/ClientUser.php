@@ -103,16 +103,18 @@ class ClientUser
                 AND id_auth = '" . $id_user . "'
             ";
         }
-            $query .= "
-               GROUP BY zp.id_ezamowienia
-            ";
+
         if ($from) {
             $query .= " AND data_zlozenia >= CAST('" . $from . "' AS DATE)";
         }
         if ($to) {
             $query .= " AND data_zlozenia <= CAST('" . $to . "' AS DATE)";
         }
-dump($query);
+
+        $query .= "
+               GROUP BY zp.id_ezamowienia
+            ";
+        dump($query);
         return $this->connection->fetchAll($query);
     }
 

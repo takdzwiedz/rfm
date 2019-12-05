@@ -19,6 +19,8 @@
               href="https://cdnjs.cloudflare.com/ajax/libs/material-design-lite/1.1.0/material.min.css">
         <link rel="stylesheet" type="text/css"
               href="https://cdn.datatables.net/1.10.20/css/dataTables.material.min.css">
+        <link href="http://code.jquery.com/ui/1.10.2/themes/smoothness/jquery-ui.css" rel="Stylesheet"/>
+
         <link rel="stylesheet" type="text/css" href="{{ asset('css/main.css') }}">
     {% endblock %}
 </head>
@@ -31,6 +33,14 @@
         <div class="sidebar-header">
             <a href="{{ path('analysis_index') }}"><img src="{{ asset('image/it_center_logo.png') }}"
                                                         style="width: 210px"></a>
+        </div>
+        <div>
+            <form method="post" action="{{ path('analysis_search') }}">
+                <div class="autocomplete" style="width:300px;">
+                <input name="search" id="searchProduct" type="text" onchange="" placeholder="wyszukaj artykuł">
+                <button type="submit">Szukaj</button>
+                </div>
+            </form>
         </div>
 
         <ul class="list-unstyled components">
@@ -55,15 +65,12 @@
                 </ul>
             </li>
             <li>
-                <a href="#pageSubmenu">Raporty porównawcze</a>
+                <a id="comparative-report" href="#pageSubmenu" onclick="myFunction()">Raporty porównawcze</a>
             </li>
             <li>
                 <a href="#pageSubmenu">Konfigurator raportów</a>
             </li>
-
         </ul>
-
-
     </nav>
 
     <!-- Page Content  -->
@@ -81,6 +88,7 @@
                         aria-expanded="false" aria-label="Toggle navigation">
                     <i class="fas fa-align-justify"></i>
                 </button>
+
 
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="nav navbar-nav ml-auto">
@@ -104,6 +112,7 @@
 
 
 {% block javascripts %}
+
     <script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.js"></script>
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
@@ -123,6 +132,9 @@
     <!-- jQuery library -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <!-- jQuery Custom Scroller CDN -->
+
+    <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+    <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
 
     <script type="text/javascript" src="{{ asset('js/main.js') }}"></script>
 {% endblock %}

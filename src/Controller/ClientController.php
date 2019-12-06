@@ -93,4 +93,19 @@ class ClientController extends AbstractController
             return $this->render('security/index.html.twig');
         }
     }
+
+    /**
+     * @Route("/client/{id_product}/{id_group}", name="analysis_client")
+     */
+    public function clientList(GroupOrder $groupOrder, Request $request, $id_product, $id_group)
+    {
+        // Pobarnie wszystkich klientów dla danej grupy lub grup, którzy zrobili zamówieniago produktu,
+
+        $arr = [$id_group];
+
+        $data = $groupOrder->getGroupsOrder($id_product, $arr);
+
+        return new JsonResponse($data);
+    }
+
 }

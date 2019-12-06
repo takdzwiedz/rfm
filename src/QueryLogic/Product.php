@@ -35,7 +35,7 @@ class Product
         return $stmt->fetchAll();
     }
 
-    public function productOrderDetail($id_product, $from = null, $to = null, $id_group = null)
+    public function productOrderDetail($id_product, $from = null, $to = null, $id_group = null, $id_client = null)
     {
         $query = "
             SELECT z.id_ezamowienia               id_order,
@@ -83,6 +83,11 @@ class Product
         if ($id_group) {
             $query .= "
                 AND kg.id_grupy ='" . $id_group . "'
+                ";
+        }
+        if ($id_client) {
+            $query .= "
+               AND k.id_kontrahenta IN (" . $id_client . ")
                 ";
         }
 

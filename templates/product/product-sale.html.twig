@@ -41,7 +41,7 @@
 
                 <div class="row">
                     <div class="col-2">
-                        <select name="group" class="form-control">
+                        <select name="group" class="form-control" id="idGroup" onchange="getClients()">
                             <option value="">Wszystkie grupy</option>
                             {%  for g in groups %}
                                 {% set selected = '' %}
@@ -50,6 +50,19 @@
                                 {% endif %}
 
                                 <option value="{{ g.id_grupy }}" {{ selected }}>{{ g.nazwa_grupy }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-2">
+                        <select name="client" class="form-control" id="idClient">
+                            <option value="">Wszyscy klienci</option>
+                            {%  for c in clients %}
+                                {% set selected = '' %}
+                                {% if c.id_kontrahenta == id_client %}
+                                    {% set selected = 'selected' %}
+                                {% endif %}
+
+                                <option value="{{ c.id_kontrahenta }}" {{ selected }}>{{ c.nazwa_kontrahenta }}</option>
                             {% endfor %}
                         </select>
                     </div>

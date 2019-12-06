@@ -17,7 +17,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class SubcategoryController extends AbstractController
 {
     /**
-     * @Route("/subcategory-product-list/{id_category}", name="analysissubcategory-product-list")
+     * @Route("/subcategory-product-list/{id_category}", name="analysis_subcategory_product_list")
      */
     public function subcategoryProductList($id_category, ProductSubcategory $productSubcategory)
     {
@@ -69,11 +69,18 @@ class SubcategoryController extends AbstractController
             $to = htmlspecialchars($request->query->get("to"));
             $unit = $request->query->get("unit") ? htmlspecialchars($request->query->get("unit")) : 'month';
             $idGroup = $request->query->get("group") ? htmlspecialchars($request->query->get("group")) : null;
+            $idClient = $request->query->get("client") ? htmlspecialchars($request->query->get("client")) : null;
             $productSaleDetail = $productSale->getData($id_product);
             $date = new \DateTime();
             $toDefault = $date->format("Y-m-d");
             $fromDefault = $date->modify("-12 months")->format("Y-m-d");
             $groups = $groupOrder->getAll(null,null, null, $id_product);
+            $selectedGroup = $groupOrder->getAll($idGroup,null, null, $id_product);
+            $arr = [];
+            foreach ($selectedGroup as $g) {
+                $arr[] = $g['id_grupy'];
+            }
+            $clients = $groupOrder->getGroupsOrder($id_product, $arr, $from, $to);
             $units = [
                 [
                     'unit' => 'day',
@@ -102,14 +109,16 @@ class SubcategoryController extends AbstractController
                 $id_product,
                 $from ? $from : $fromDefault,
                 $to ? $to : $toDefault,
-                $idGroup ? $idGroup : null
+                $idGroup ? $idGroup : null,
+                $idClient ? $idClient : null
             );
             $productSaleData = $productSale->getSaleByMonth(
                 $id_product,
                 $from ? $from : $fromDefault,
                 $to ? $to : $toDefault,
                 $unit ? $unit : 'month',
-                $idGroup ? $idGroup : null
+                $idGroup ? $idGroup : null,
+                $idClient ? $idClient : null
             );
 
             if ($unit == 'day') {
@@ -152,10 +161,12 @@ class SubcategoryController extends AbstractController
             $columnChart->getOptions()->setColors('#28A745');
 
             $data = [
+                'clients' => $clients,
                 'control_sum' => $controlSum,
                 'column_chart' => $columnChart,
                 'from' => $from,
                 'groups' => $groups,
+                'id_client' => $idClient,
                 'id_group' => $idGroup,
                 'id_product' => $id_product,
                 'product' => $productDetail,

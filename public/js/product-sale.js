@@ -29,7 +29,7 @@ $(document).ready(function () {
                 .reduce(function (a, b) {
                     return intVal(a) + intVal(b);
                 }, 0);
-            tatal = (Math.round(total * 100)/100).toFixed(2);
+            tatal = (Math.round(total * 100) / 100).toFixed(2);
 
             // Total over this page
             pageTotal = api
@@ -38,7 +38,7 @@ $(document).ready(function () {
                 .reduce(function (a, b) {
                     return intVal(a) + intVal(b);
                 }, 0);
-            pageTotal = (Math.round(pageTotal * 100)/100).toFixed(2);
+            pageTotal = (Math.round(pageTotal * 100) / 100).toFixed(2);
 
             // Update footer
             $(api.column(7).footer()).html(
@@ -56,3 +56,32 @@ $(document).ready(function () {
         });
     }).draw();
 });
+
+
+function getClients() {
+    var url = window.location.origin;
+    var idProduct = window.location.href.split('/')[4].split('?')[0];
+    console.log(window.location.href.split('/')[4].split('?')[0]);
+    var idGroup = document.getElementById("idGroup").value;
+
+    $.ajax({
+
+        url: url.split('/')[0] + '/client/' + idProduct + '/' + idGroup,
+        method: 'post',
+        success: function (res) {
+            $('#idClient').empty();
+            $('#idClient').append('<option value=\"\">' + 'Wszyscy klienci' + '</option>');
+
+            Object.keys(res).forEach(key => {
+                console.log(res[key]['id_kontrahenta']);
+
+                $('#idClient').append('<option value=' + res[key]['id_kontrahenta'] + '>' + res[key]['nazwa_kontrahenta'] + '</option>');
+            })
+
+        },
+        error: function () {
+            console.log('failure');
+        },
+
+    })
+}

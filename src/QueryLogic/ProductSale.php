@@ -78,7 +78,7 @@ class ProductSale
     }
 
 
-    public function getSaleByMonth($id_product = null, $from = null, $to = null, $unit = null, $id_group = null)
+    public function getSaleByMonth($id_product = null, $from = null, $to = null, $unit = null, $id_group = null, $id_client = null)
     {
         $query= "
             
@@ -93,14 +93,14 @@ class ProductSale
                    IFNULL(DAY(data_zlozenia), DAY(k.miesiace))             order_day,
                    IFNULL(SUM(zp.cena_netto * ilosc), 0)                   sum
             FROM kalendarz k
-            LEFT OUTER JOIN zamowienia z
+            LEFT JOIN zamowienia z
                 on MONTH(z.data_zlozenia) = MONTH(k.miesiace) 
                              AND QUARTER(z.data_zlozenia) = QUARTER(z.data_zlozenia)
                              AND YEAR(z.data_zlozenia) = YEAR(k.miesiace)
                              AND WEEK(z.data_zlozenia) = WEEK(k.miesiace)
                              AND DAY(z.data_zlozenia) = DAY(k.miesiace)
             LEFT JOIN kontrahenci k2 on z.id_kontrahenta = k2.id_kontrahenta
-            LEFT OUTER JOIN zamowienia_pozycje zp on z.id_ezamowienia = zp.id_ezamowienia 
+            LEFT JOIN zamowienia_pozycje zp on z.id_ezamowienia = zp.id_ezamowienia 
         ";
         if ($id_product) {
             $query .= "
@@ -110,6 +110,11 @@ class ProductSale
         if ($id_group) {
             $query .= "
             AND k2.id_grupy IN ('".$id_group."')
+            ";
+        }
+        if ($id_client) {
+            $query .= "
+            AND z.id_kontrahenta IN ('".$id_client."')
             ";
         }
 

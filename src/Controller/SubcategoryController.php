@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\QueryLogic\GroupOrder;
 use App\QueryLogic\Product;
 use App\QueryLogic\ProductSale;
 use App\QueryLogic\ProductSubcategory;
@@ -53,37 +54,46 @@ class SubcategoryController extends AbstractController
     /**
      * @Route("/product-sale/{id_product}", name="analysis_product_sale")
      */
-    public function productSale(Request $request, $id_product, ProductSale $productSale, Product $product, ChartRender $chartRender, Session $session)
+    public function productSale(
+        Request $request,
+        $id_product,
+        ProductSale $productSale,
+        Product $product,
+        ChartRender $chartRender,
+        Session $session,
+        GroupOrder $groupOrder
+    )
     {
         if ($session->get('logged') == true) {
-
             $from = htmlspecialchars($request->query->get("from"));
             $to = htmlspecialchars($request->query->get("to"));
             $unit = $request->query->get("unit") ? htmlspecialchars($request->query->get("unit")) : 'month';
+            $idGroup = $request->query->get("group") ? htmlspecialchars($request->query->get("group")) : null;
             $productSaleDetail = $productSale->getData($id_product);
             $date = new \DateTime();
             $toDefault = $date->format("Y-m-d");
             $fromDefault = $date->modify("-12 months")->format("Y-m-d");
+            $groups = $groupOrder->getAll(null,null, null, $id_product);
             $units = [
                 [
-                    'unit' => 'year',
-                    'unit_name' => 'roczne'
-                ],
-                [
-                    'unit' => 'quarter',
-                    'unit_name' => 'kwartalnie'
-                ],
-                [
-                    'unit' => 'month',
-                    'unit_name' => 'miesięczne'
+                    'unit' => 'day',
+                    'unit_name' => 'dzienne'
                 ],
                 [
                     'unit' => 'week',
                     'unit_name' => 'tygodniowo'
                 ],
                 [
-                    'unit' => 'day',
-                    'unit_name' => 'dzienne'
+                    'unit' => 'month',
+                    'unit_name' => 'miesięcznie'
+                ],
+                [
+                    'unit' => 'quarter',
+                    'unit_name' => 'kwartalnie'
+                ],
+                [
+                    'unit' => 'year',
+                    'unit_name' => 'rocznie'
                 ],
             ];
             $unitDefault = "month";
@@ -91,13 +101,15 @@ class SubcategoryController extends AbstractController
             $productOrderList = $product->productOrderDetail(
                 $id_product,
                 $from ? $from : $fromDefault,
-                $to ? $to : $toDefault
+                $to ? $to : $toDefault,
+                $idGroup ? $idGroup : null
             );
             $productSaleData = $productSale->getSaleByMonth(
                 $id_product,
                 $from ? $from : $fromDefault,
                 $to ? $to : $toDefault,
-                $unit ? $unit : 'month'
+                $unit ? $unit : 'month',
+                $idGroup ? $idGroup : null
             );
 
             if ($unit == 'day') {
@@ -143,6 +155,8 @@ class SubcategoryController extends AbstractController
                 'control_sum' => $controlSum,
                 'column_chart' => $columnChart,
                 'from' => $from,
+                'groups' => $groups,
+                'id_group' => $idGroup,
                 'id_product' => $id_product,
                 'product' => $productDetail,
                 'product_order_list' => $productOrderList,
@@ -157,7 +171,6 @@ class SubcategoryController extends AbstractController
             ];
             dump($data);
             return $this->render("product/product-sale.html.twig", $data);
-
         } else {
             return $this->render('security/index.html.twig');
         }

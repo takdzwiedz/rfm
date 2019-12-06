@@ -35,7 +35,7 @@ class Product
         return $stmt->fetchAll();
     }
 
-    public function productOrderDetail($id_product, $from = null, $to = null)
+    public function productOrderDetail($id_product, $from = null, $to = null, $id_group = null)
     {
         $query = "
             SELECT z.id_ezamowienia               id_order,
@@ -78,6 +78,11 @@ class Product
         } else {
             $query .= "
                 WHERE zp.id_artykulu = '" . $id_product . "' OR zp.id_artykulu = 9585 and z.data_zlozenia is null
+                ";
+        }
+        if ($id_group) {
+            $query .= "
+                AND kg.id_grupy ='" . $id_group . "'
                 ";
         }
 

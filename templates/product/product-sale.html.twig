@@ -41,6 +41,19 @@
 
                 <div class="row">
                     <div class="col-2">
+                        <select name="group" class="form-control">
+                            <option value="">Wszystkie grupy</option>
+                            {%  for g in groups %}
+                                {% set selected = '' %}
+                                {% if g.id_grupy == id_group %}
+                                    {% set selected = 'selected' %}
+                                {% endif %}
+
+                                <option value="{{ g.id_grupy }}" {{ selected }}>{{ g.nazwa_grupy }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-2">
                         <input type="date" data-provide="datepicker" class="datepicker form-control" name="from"
                                value="{{ from ? from : "now -12 months + 1 day"|date("Y-m-d") }}">
                     </div>

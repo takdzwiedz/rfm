@@ -24,20 +24,24 @@ class GroupOrder
         $this->connection = $connection;
     }
 
-    public function getAll($id_group = null, $from = null, $to = null)
+    public function getAll($id_group = null, $from = null, $to = null, $id_product = null)
     {
         $query = "
-            SELECT IFNULL(kg.id_grupy, -1)           id_grupy,
-                   IFNULL(kg.nazwa_grupy, 'Brak przypisanej grupy')                    nazwa_grupy,
-                   count(distinct zp.id_ezamowienia) ilosc_zamowien_w_grupie,
-                   sum(zp.cena_netto * zp.ilosc)     wartosc_zamowien_netto,
-                   sum(zp.cena_brutto * zp.ilosc)    wartosc_zamowien_brutto
+            SELECT IFNULL(kg.id_grupy, -1)                                              id_grupy,
+                   IFNULL(kg.nazwa_grupy, 'Brak przypisanej grupy')                     nazwa_grupy,
+                   count(distinct zp.id_ezamowienia)                                    ilosc_zamowien_w_grupie,
+                   sum(zp.cena_netto * zp.ilosc)                                        wartosc_zamowien_netto,
+                   sum(zp.cena_brutto * zp.ilosc)                                       wartosc_zamowien_brutto
             FROM zamowienia_pozycje zp
                      LEFT JOIN zamowienia z on zp.id_ezamowienia = z.id_ezamowienia
                      LEFT JOIN kontrahenci k on z.id_kontrahenta = k.id_kontrahenta
                      LEFT JOIN kontrahenci_grupy kg on k.id_grupy = kg.id_grupy
             WHERE 0 = 0
         ";
+        if($id_product) {
+            $query .= "AND id_artykulu = '" . $id_product . "'";
+        }
+
         if ($id_group) {
             $query .= "AND kg.id_grupy = '" . $id_group . "'";
         }
